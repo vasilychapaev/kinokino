@@ -11,10 +11,13 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+//Route::get('/home', 'HomeController@index')->name('home');
+
+
+Route::get('/', 'MoviesController@index');
+Route::get('/category', 'MoviesController@category');
+Route::get('/item/{id}', 'MoviesController@show');
+//Route::get('/category/comedy', 'MoviesController@itemsGenre');
+//Route::get('/serials/comedy', 'MoviesController@itemsGenre');
