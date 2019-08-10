@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Import;
 
+use App\Models\ImportMoonwalkForeign;
 use Illuminate\Console\Command;
 use phpDocumentor\Reflection\Types\Null_;
 use Rodenastyle\StreamParser\StreamParser;
@@ -136,6 +137,34 @@ class Moonwalk extends Command
     protected function store($data){
 
         var_dump($data);
+
+        ImportMoonwalkForeign::firstOrcreate(
+            ['token' => $data['token']],
+            [
+                'title_ru' => $data['title_ru'],
+                'title_en'=> $data['title_en'],
+                'year'=> $data['year'],
+                'duration'=> $data['duration'],
+                'kinopoisk_id'=> $data['kinopoisk_id'],
+                'world_art_id'=> $data['world_art_id'],
+                'pornolab_id'=> $data['pornolab_id'],
+                'token'=> $data['token'],
+                'type'=> $data['type'],
+                'camrip'=> $data['camrip'],
+                'source_type'=> $data['source_type'],
+                'source_quality_type'=> $data['source_quality_type'],
+                'instream_ads'=> $data['instream_ads'],
+                'directors_version'=> $data['directors_version'],
+                'iframe_url'=> $data['iframe_url'],
+                'trailer_token'=> $data['trailer_token'],
+                'trailer_iframe_url'=> $data['trailer_iframe_url'],
+                'translator'=> $data['translator'],
+                'translator_id'=> $data['translator_id'],
+                'added_at'=> $data['added_at'],
+                'category'=> $data['category'],
+                'material_data'=> $data['material_data']
+            ]
+        );
 
     }
 }
