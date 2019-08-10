@@ -22,7 +22,7 @@
 
             <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
                 <div class="card bg-primary text-white shadow">
-                    <a href="/item/1"><img src="//cdn.service-kp.com/poster/item/small/52750.jpg" class="card-img-top card-img-bottom" alt="..."></a>
+                    <a href="/item/1"><img src="//cdn.service-kp.com/poster/item/big/53200.jpg" class="card-img-top card-img-bottom" alt="..."></a>
 
                 </div>
             </div>

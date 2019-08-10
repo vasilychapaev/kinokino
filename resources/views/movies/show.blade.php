@@ -40,7 +40,7 @@
         <!-- Poster -->
         <div class="col-lg-3">
             <div class="card shadow mb-4">
-                <img src="//cdn.service-kp.com/poster/item/small/52750.jpg" class="card-img-top card-img-bottom" alt="..."
+                <img src="//cdn.service-kp.com/poster/item/big/87.jpg" class="card-img-top card-img-bottom" alt="..."
                      style="max-height: 375px">
             </div>
 
