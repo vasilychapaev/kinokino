@@ -17,11 +17,12 @@
         <div class="col-lg-9">
             <div class="card shadow mb-4" >
                 <div class="embed-responsive embed-responsive-21by9">
-                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/F40TxFHNPQA" allowfullscreen=""></iframe>
+{{--                    <iframe class="embed-responsive-item" src="https://www.youtube.com/embed/F40TxFHNPQA" allowfullscreen=""></iframe>--}}
                     {{--<iframe class="embed-responsive-item" src="https://player.vimeo.com/video/137857207" allowfullscreen></iframe>--}}
                     {{--<video class="video-fluid z-depth-1" autoplay loop controls muted>
                         <source src="https://mdbootstrap.com/img/video/Sail-Away.mp4" type="video/mp4" />
                     </video>--}}
+                    <iframe class="embed-responsive-item" src="http://moonwalk.cc/video/c963de22bf697c3e/iframe" allowfullscreen=""></iframe>
                 </div>
 
             </div>
