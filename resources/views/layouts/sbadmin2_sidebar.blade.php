@@ -15,10 +15,10 @@
     <div class="sidebar-heading mb-2">All Movies</div>
 
     <li class="nav-item">
-        <a class="nav-link pt-2 pb-1" href="#"><i class="fas fa-fw fa-film"></i><span>Movies</span></a>
+        <a class="nav-link pt-2 pb-1" href="/category"><i class="fas fa-fw fa-film"></i><span>Movies</span></a>
     </li>
     <li class="nav-item">
-        <a class="nav-link pt-2 pb-1" href="#"><i class="fas fa-fw fa-film"></i><span>Serials</span></a>
+        <a class="nav-link pt-2 pb-1" href="/category"><i class="fas fa-fw fa-film"></i><span>Serials</span></a>
     </li>
 
 
