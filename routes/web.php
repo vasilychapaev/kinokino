@@ -16,7 +16,7 @@ Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::get('/', 'MoviesController@index');
+Route::match(['get', 'post'], '/', 'MoviesController@index');
 Route::get('/category', 'MoviesController@category');
 Route::get('/movie/{id}', 'MoviesController@show');
 //Route::get('/category/comedy', 'MoviesController@itemsGenre');

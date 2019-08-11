@@ -7,12 +7,23 @@ use Illuminate\Http\Request;
 
 class MoviesController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
 
-        $movies = Film::whereNotNull('poster')->limit(30)->orderby('updated_at', 'DESC')->pluck('poster', 'id');
+        $search = $request->search;
 
-        return view('movies.index', compact('movies'));
+        $movies = Film::where(function($q) use($search) {
+            $q->whereNotNull('poster');
+            if ($search) {
+                $q->where('title_ru', 'like', '%'.$search.'%');
+                $q->orWhere('title_en', 'like', '%'.$search.'%');
+            }
+
+        })->limit(30)->orderby('updated_at', 'DESC')->pluck('poster', 'id');
+
+        $title = $search ? 'Результаты поиска по: ' . $search : 'Новинки на сайте';
+
+        return view('movies.index', compact('movies', 'title'));
     }
 
     public function category()
