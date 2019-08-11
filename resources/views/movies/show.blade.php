@@ -4,7 +4,7 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mt-3 mb-2">
-        <h1 class="h3 mb-0 text-gray-800">Terminator 8</h1>
+        <h1 class="h3 mb-0 text-gray-800">{{ $movie->title_ru }} <small>/ {{ $movie->title_en  }}</small></h1>
         {{--                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>--}}
     </div>
 
@@ -22,7 +22,7 @@
                     {{--<video class="video-fluid z-depth-1" autoplay loop controls muted>
                         <source src="https://mdbootstrap.com/img/video/Sail-Away.mp4" type="video/mp4" />
                     </video>--}}
-                    <iframe class="embed-responsive-item" src="http://moonwalk.cc/video/c963de22bf697c3e/iframe" allowfullscreen=""></iframe>
+                    <iframe class="embed-responsive-item" src="{{ $movie->iframe_url }}" allowfullscreen=""></iframe>
                 </div>
 
             </div>
