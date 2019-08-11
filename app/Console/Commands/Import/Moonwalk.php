@@ -2,7 +2,12 @@
 
 namespace App\Console\Commands\Import;
 
+use App\Models\Category;
+use App\Models\Film;
 use App\Models\ImportMoonwalkForeign;
+use App\Models\Source_Type;
+use App\Models\Translator;
+use App\Models\Type;
 use Illuminate\Console\Command;
 use phpDocumentor\Reflection\Types\Null_;
 use Rodenastyle\StreamParser\StreamParser;
@@ -127,16 +132,14 @@ class Moonwalk extends Command
                 $get['material_data'] = $item['material_data'];
 
                 // store data
-                $this->store($get);
+                $this->storeImport($get);
 
             }
 
         });
     }
 
-    protected function store($data){
-
-        var_dump($data);
+    protected function storeImport($data){
 
         ImportMoonwalkForeign::firstOrcreate(
             ['token' => $data['token']],
@@ -165,6 +168,61 @@ class Moonwalk extends Command
                 'material_data'=> $data['material_data']
             ]
         );
+
+        $this->storeOneFilm($data);
+
+    }
+
+    protected function storeFilms() {
+
+        ImportMoonwalkForeign::chunk('500', function ($imports){
+            $count = count($imports);
+            $bar = $this->output->createProgressBar($count);
+            foreach ($imports as $import) {
+                $bar->advance();
+                $data = $import->toArray();
+                $this->storeOneFilm($data);
+            }
+            $bar->finish();
+        });
+
+    }
+
+    protected function storeOneFilm($array) {
+
+        // category
+        $category_id = Category::updateOrcreate(['name' => trim($array['category'])])->id;
+        // type
+        $type_id = Type::updateOrcreate(['name' => trim($array['type'])])->id;
+        // source_type
+        $source_type_id = Source_Type::updateOrcreate(['name' => trim($array['source_type'])])->id;
+        // translator
+        $translator_id = Translator::updateOrcreate(['name' => trim($array['translator'])])->id;
+        // duration_human
+        $duration_human = empty($array['duration']) ? '' : json_decode($array['duration'])->human;
+
+        // add film
+        $film = Film::updateOrcreate(
+            ['kinopoisk_id' => $array['kinopoisk_id']],
+            [
+                'title_ru' => $array['title_ru'],
+                'title_en' => $array['title_en'],
+                'year' => $array['year'],
+                'token' => $array['token'],
+                'kinopoisk_id' => $array['kinopoisk_id'],
+                'world_art_id' => $array['world_art_id'],
+                'category' => $category_id,
+                'type' => $type_id,
+                'source_type' => $source_type_id,
+                'iframe_url' => $array['iframe_url'],
+                'token' => $array['token'],
+                'trailer_iframe_url' => $array['trailer_iframe_url'],
+                'trailer_token' => $array['trailer_token'],
+                'duration_human' => $duration_human,
+                'translator' => $translator_id,
+                'added_at' => $array['added_at'],
+
+            ]);
 
     }
 }
