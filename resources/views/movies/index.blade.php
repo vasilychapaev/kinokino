@@ -2,16 +2,16 @@
 
 @section('content')
 
-    @foreach (range(1,3) as $i)
+    @foreach (range(1,1) as $i)
         <!-- Page Heading -->
         <div class="d-sm-flex align-items-center justify-content-between mt-3 mb-2">
-            <h1 class="h3 mb-0 text-gray-800">Newest</h1>
+            <h1 class="h3 mb-0 text-gray-800">Новинки сайта</h1>
             {{--                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>--}}
         </div>
 
         <div class="row">
 
-            @foreach (range(1,6) as $item)
+            @foreach ($movies as $id => $poster)
                 {{--<div class="col-lg-2 mb-3">
                     <div class="card bg-primary text-white shadow">
                         <div class="card-body">
@@ -23,7 +23,7 @@
 
                 <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
                     <div class="card bg-primary text-white shadow">
-                        <a href="/item/1"><img src="//cdn.service-kp.com/poster/item/small/52750.jpg" class="card-img-top card-img-bottom" alt="..."></a>
+                        <a href="/movie/{{ $id }}"><img src="{{ $poster }}" class="card-img-top card-img-bottom" alt="..."></a>
 
                     </div>
                 </div>

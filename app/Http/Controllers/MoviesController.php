@@ -10,7 +10,9 @@ class MoviesController extends Controller
     public function index()
     {
 
-        return view('movies.index');
+        $movies = Film::whereNotNull('poster')->limit(30)->orderby('updated_at', 'DESC')->pluck('poster', 'id');
+
+        return view('movies.index', compact('movies'));
     }
 
     public function category()
