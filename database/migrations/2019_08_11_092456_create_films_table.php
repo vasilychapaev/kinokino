@@ -30,6 +30,12 @@ class CreateFilmsTable extends Migration
             $table->string('trailer_token')->nullable();
             $table->string('duration_human')->nullable();
             $table->integer('translator')->unsigned()->nullable();
+            $table->string('poster')->nullable();
+            $table->text('tagline')->nullable();
+            $table->text('description')->nullable();
+            $table->string('kinopoisk_rating')->nullable();
+            $table->string('kinopoisk_votes')->nullable();
+            $table->string('age')->nullable();
             $table->string('added_at')->nullable();
             $table->timestamps();
         });

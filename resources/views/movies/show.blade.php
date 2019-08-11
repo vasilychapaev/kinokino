@@ -4,7 +4,7 @@
 
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mt-3 mb-2">
-        <h1 class="h3 mb-0 text-gray-800">{{ $movie->title_ru }} <small>/ {{ $movie->title_en  }}</small></h1>
+        <h1 class="h3 mb-0 text-gray-800">{{ $movie->title_ru }} <br/><small>{{ $movie->title_en  }}</small></h1>
         {{--                    <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i class="fas fa-download fa-sm text-white-50"></i> Generate Report</a>--}}
     </div>
 
@@ -26,13 +26,9 @@
                 </div>
 
             </div>
-
+            <h3>{{ $movie->tagline }}</h3>
             <p>
-                Прошло более десяти лет с тех пор, как киборг-терминатор из 2029 года пытался уничтожить Сару Коннор - женщину, чей будущий сын выиграет войну человечества против машин.
-                <br>
-                Теперь у Сары родился сын Джон и время, когда он поведёт за собой выживших людей на борьбу с машинами, неумолимо приближается. Именно в этот момент из постапокалиптического будущего прибывает новый терминатор - практически неуязвимый и способный принимать любое обличье. Цель нового терминатора уже не Сара, а уничтожение молодого Джона Коннора.
-                <br>
-                Однако шансы Джона на спасение существенно повышаются, когда на помощь приходит перепрограммированный сопротивлением терминатор предыдущего поколения. Оба киборга вступают в смертельный бой, от исхода которого зависит судьба человечества.
+                {{ $movie->description }}
             </p>
         </div>
 
@@ -41,14 +37,18 @@
         <!-- Poster -->
         <div class="col-lg-3">
             <div class="card shadow mb-4">
-                <img src="//cdn.service-kp.com/poster/item/big/87.jpg" class="card-img-top card-img-bottom" alt="..."
+                <img src="{{ $movie->poster }}" class="card-img-top card-img-bottom" alt="..."
                      style="max-height: 375px">
             </div>
 
-            <p>Жанры: комедия боевик</p>
-            <p>Год: 2018</p>
-            <p>Рейтинг: 7</p>
-            <p>Актеры: Арнольд Шварценегер, Брюс Ли, Томи Ли Джонс, Индиана Джонс</p>
+            <p>Жанры: {{ $genres }}</p>
+            <p>Год: {{ $movie->year }}</p>
+            <p>Рейтинг: {{ $movie->kinopoisk_rating }}</p>
+            <p>Голосов: {{ $movie->kinopoisk_votes }}</p>
+            <p>Актеры: {{ $actors }}</p>
+            <p>Директор: {{ $directors }}</p>
+            <p>Страна: {{ $countries }}</p>
+            <p>Возраст: {{ $movie->age }}</p>
         </div>
 
 

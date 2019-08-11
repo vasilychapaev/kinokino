@@ -2,14 +2,21 @@
 
 namespace App\Console\Commands\Import;
 
+use App\Models\Actor;
 use App\Models\Category;
+use App\Models\Country;
+use App\Models\Director;
 use App\Models\Film;
+use App\Models\Film_actor;
+use App\Models\Film_Country;
+use App\Models\Film_director;
+use App\Models\Film_genre;
+use App\Models\Genre;
 use App\Models\ImportMoonwalkForeign;
 use App\Models\Source_Type;
 use App\Models\Translator;
 use App\Models\Type;
 use Illuminate\Console\Command;
-use phpDocumentor\Reflection\Types\Null_;
 use Rodenastyle\StreamParser\StreamParser;
 use Tightenco\Collect\Support\Collection;
 
@@ -211,6 +218,23 @@ class Moonwalk extends Command
         // duration_human
         $duration_human = empty($array['duration']) ? '' : json_decode($array['duration'])->human;
 
+        $poster = $tagline = $description = $kinopoisk_rating = $kinopoisk_votes = $age = Null;
+        if ( !empty($array['material_data']) ) {
+                $material_data = json_decode($array['material_data']);
+                // $poster
+                $poster = $material_data->poster;
+                // tagline
+                $tagline = $material_data->tagline;
+                // description
+                $description = $material_data->description;
+                // kinopoisk_rating
+                $kinopoisk_rating = $material_data->kinopoisk_rating;
+                // kinopoisk_votes
+                $kinopoisk_votes = $material_data->kinopoisk_votes;
+                // age
+                $age = $material_data->age;
+            }
+
         // add film
         $film = Film::updateOrcreate(
             ['kinopoisk_id' => $array['kinopoisk_id']],
@@ -230,9 +254,50 @@ class Moonwalk extends Command
                 'trailer_token' => $array['trailer_token'],
                 'duration_human' => $duration_human,
                 'translator' => $translator_id,
+                'poster' => $poster,
+                'tagline' => $tagline,
+                'description' => $description,
+                'age' => $age,
+                'kinopoisk_rating' => $kinopoisk_rating,
+                'kinopoisk_votes' => $kinopoisk_votes,
                 'added_at' => $array['added_at'],
 
             ]);
+
+        if ( !empty($material_data) ) {
+            // countries
+            if ( isset($material_data->countries)) {
+                foreach ($material_data->countries as $country) {
+                    $country_id = Country::updateOrCreate(['name' => trim($country)])->id;
+                    Film_Country::updateOrCreate(['film_id' => $film->id, 'country_id' => $country_id]);
+                }
+            }
+
+            // actors
+            if ( isset($material_data->actors)) {
+                foreach ($material_data->actors as $actor) {
+                    $actor_id = Actor::updateOrCreate(['name' => trim($actor)])->id;
+                    Film_actor::updateOrCreate(['film_id' => $film->id, 'actor_id' => $actor_id]);
+                }
+            }
+
+            // directors
+            if ( isset($material_data->directors)) {
+                foreach ($material_data->directors as $director) {
+                    $director_id = Director::updateOrCreate(['name' => trim($director)])->id;
+                    Film_director::updateOrCreate(['film_id' => $film->id, 'director_id' => $director_id]);
+                }
+            }
+
+            // genres
+            if ( isset($material_data->genres)) {
+                foreach ($material_data->genres as $genre) {
+                    $genre_id = Genre::updateOrCreate(['name' => trim($genre)])->id;
+                    Film_genre::updateOrCreate(['film_id' => $film->id, 'genre_id' => $genre_id]);
+                }
+            }
+
+        }
 
     }
 }
