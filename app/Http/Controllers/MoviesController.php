@@ -19,7 +19,7 @@ class MoviesController extends Controller
                 $q->orWhere('title_en', 'like', '%'.$search.'%');
             }
 
-        })->limit(30)->orderby('updated_at', 'DESC')->pluck('poster', 'id');
+        })->limit(30)->orderby('updated_at', 'DESC')->pluck('poster', 'slug');
 
         $title = $search ? 'Результаты поиска по: ' . $search : 'Новинки на сайте';
 
@@ -31,11 +31,11 @@ class MoviesController extends Controller
         return view('movies.category');
     }
 
-    public function show($id)
+    public function show($slug)
     {
 
-        $movie = Film::where('id', $id)->with('FilmGenres')->with('FilmDirectors')
-            ->with('FilmActors')->with('FilmCountries')->first();
+        $movie = Film::where('slug', $slug)->with('FilmGenres')->with('FilmDirectors')
+            ->with('FilmActors')->with('FilmCountries')->firstOrFail();
 
         $genres = Null;
         foreach ($movie->FilmGenres as $item) {

@@ -474,7 +474,7 @@ class Moonwalk extends Command
         }
 
         // add film
-        $film = Film::updateOrcreate(
+        $film = Film::firstOrCreate(
             ['kinopoisk_id' => $array['kinopoisk_id']],
             [
                 'title_ru' => $array['title_ru'],
@@ -498,9 +498,15 @@ class Moonwalk extends Command
                 'age' => $age,
                 'kinopoisk_rating' => $kinopoisk_rating,
                 'kinopoisk_votes' => $kinopoisk_votes,
-                'added_at' => $array['added_at'],
-
+                'added_at' => $array['added_at']
             ]);
+
+        // create url for movie
+        $year = !empty($array['year']) ? '_'.$array['year'] : '';
+        $slug = str_slug($array['title_ru'], '_', 'en').$year.'_'.$film->id;
+        $movie = Film::find($film->id);
+        $movie->slug = $slug;
+        $movie->save();
 
         if (!empty($material_data)) {
             // countries
