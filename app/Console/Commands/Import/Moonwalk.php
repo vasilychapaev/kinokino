@@ -11,9 +11,13 @@ use App\Models\Film_actor;
 use App\Models\Film_Country;
 use App\Models\Film_director;
 use App\Models\Film_genre;
+use App\Models\Film_studio;
 use App\Models\Genre;
+use App\Models\ImportMoonwalkCamrip;
 use App\Models\ImportMoonwalkForeign;
+use App\Models\ImportMoonwalkRussian;
 use App\Models\Source_Type;
+use App\Models\Studio;
 use App\Models\Translator;
 use App\Models\Type;
 use Illuminate\Console\Command;
@@ -42,6 +46,7 @@ class Moonwalk extends Command
      * $var array
      */
     protected $data_import = null;
+    protected $token = '000fa9e1bee1c7da7a1b74996d923405';
 
     /**
      * Create a new command instance.
@@ -68,10 +73,12 @@ class Moonwalk extends Command
         // for action in command
         $ask_array = [
             1 => ['name' => 'Foreign import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_foreign.json?api_token='],
-            2 => ['name' => 'Russian import from Moonwalk', 'url' => env('APP_URL') . '/import_.json']
+            2 => ['name' => 'Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_russian.json?api_token='],
+            3 => ['name' => 'Camrips import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_camrip.json?api_token='],
+            4 => ['name' => 'Test File', 'url' => env('APP_URL') . '/test.json'],
         ];
 
-        $token = '000fa9e1bee1c7da7a1b74996d923405';
+        $token = $this->token;
 
         // get pretty name
         foreach ($ask_array as $key => $value) {
@@ -96,8 +103,18 @@ class Moonwalk extends Command
 
         } elseif (in_array($ask, [2])) {
 
+            $this->russian($ask_array[$ask]['url']  . $token);
+
+        } elseif (in_array($ask, [3])) {
+
+            $this->camrip($ask_array[$ask]['url']  . $token);
+
+        } elseif (in_array($ask, [4])) {
+
             $this->foreign($ask_array[$ask]['url']);
 
+        } else {
+            $this->error('No action');
         }
 
 
@@ -105,59 +122,209 @@ class Moonwalk extends Command
 
     protected function foreign($url)
     {
-
         $this->info('url: ' . $url);
-
-//        $new_file = 'import.json';
-//
-//        if (!file_exists(public_path($new_file))) {
-//            file_put_contents(public_path($new_file), file_get_contents($url));
-//        }
-//
-//
-//
-//        $url = url($new_file);
+        $url = $this->storeFile($url);
 
         StreamParser::json($url)->each(function (Collection $book) {
 
-//            $report = $book->get('report');
-//
-//            $items = $report['movies'];\
+            $report = $book->get('report');
+            $items = $report['movies'];
 
-            $get['title_ru'] = $book->get('title_ru');
-            $get['title_en'] = $book->get('title_en');
-            $get['year'] = $book->get('year');
-            $get['duration'] = !empty($book->get('duration')) ? json_encode($book->get('duration')->toArray(), JSON_UNESCAPED_UNICODE) : '';
-            $get['kinopoisk_id'] = $book->get('kinopoisk_id');
-            $get['world_art_id'] = $book->get('world_art_id');
-            $get['pornolab_id'] = $book->get('pornolab_id');
-            $get['token'] = $book->get('token');
-            $get['type'] = $book->get('type');
-            $get['camrip'] = $book->get('camrip');
-            $get['source_type'] = $book->get('source_type');
-            $get['source_quality_type'] = $book->get('source_quality_type');
-            $get['instream_ads'] = $book->get('instream_ads');
-            $get['directors_version'] = $book->get('directors_version');
-            $get['iframe_url'] = $book->get('iframe_url');
-            $get['trailer_token'] = $book->get('trailer_token');
-            $get['trailer_iframe_url'] = $book->get('trailer_iframe_url');
-            $get['translator'] = $book->get('translator');
-            $get['translator_id'] = $book->get('translator_id');
-            $get['added_at'] = $book->get('added_at');
-            $get['category'] = $book->get('category');
-            $get['material_data'] = !empty($book->get('material_data')) ? json_encode($book->get('material_data')->toArray(), JSON_UNESCAPED_UNICODE) : '';
+            foreach ($items as $item) {
+                $get['title_ru'] = $item['title_ru'];
+                $get['title_en'] = $item['title_en'];
+                $get['year'] = $item['year'];
+                $get['duration'] = $item['duration'];
+                $get['kinopoisk_id'] = $item['kinopoisk_id'];
+                $get['world_art_id'] = $item['world_art_id'];
+                $get['pornolab_id'] = $item['pornolab_id'];
+                $get['token'] = $item['token'];
+                $get['type'] = $item['type'];
+                $get['camrip'] = $item['camrip'];
+                $get['source_type'] = $item['source_type'];
+                $get['source_quality_type'] = $item['source_quality_type'];
+                $get['instream_ads'] = $item['instream_ads'];
+                $get['directors_version'] = $item['directors_version'];
+                $get['iframe_url'] = $item['iframe_url'];
+                $get['trailer_token'] = $item['trailer_token'];
+                $get['trailer_iframe_url'] = $item['trailer_iframe_url'];
+                $get['translator'] = $item['translator'];
+                $get['translator_id'] = $item['translator_id'];
+                $get['added_at'] = $item['added_at'];
+                $get['category'] = $item['category'];
+                $get['material_data'] = isset($item['material_data']) ? $item['material_data'] : '';
 
-            // store data
-            $this->storeImport($get);
+                // store data
+                $this->storeImport($get);
+
+            }
+
+//            $get['title_ru'] = $book->get('title_ru');
+//            $get['title_en'] = $book->get('title_en');
+//            $get['year'] = $book->get('year');
+//            $get['duration'] = !empty($book->get('duration')) ? json_encode($book->get('duration')->toArray(), JSON_UNESCAPED_UNICODE) : '';
+//            $get['kinopoisk_id'] = $book->get('kinopoisk_id');
+//            $get['world_art_id'] = $book->get('world_art_id');
+//            $get['pornolab_id'] = $book->get('pornolab_id');
+//            $get['token'] = $book->get('token');
+//            $get['type'] = $book->get('type');
+//            $get['camrip'] = $book->get('camrip');
+//            $get['source_type'] = $book->get('source_type');
+//            $get['source_quality_type'] = $book->get('source_quality_type');
+//            $get['instream_ads'] = $book->get('instream_ads');
+//            $get['directors_version'] = $book->get('directors_version');
+//            $get['iframe_url'] = $book->get('iframe_url');
+//            $get['trailer_token'] = $book->get('trailer_token');
+//            $get['trailer_iframe_url'] = $book->get('trailer_iframe_url');
+//            $get['translator'] = $book->get('translator');
+//            $get['translator_id'] = $book->get('translator_id');
+//            $get['added_at'] = $book->get('added_at');
+//            $get['category'] = $book->get('category');
+//            $get['material_data'] = !empty($book->get('material_data')) ? json_encode($book->get('material_data')->toArray(), JSON_UNESCAPED_UNICODE) : '';
 
         });
+
+    }
+
+    protected function russian($url)
+    {
+        $this->info('url: ' . $url);
+        $url = $this->storeFile($url);
+
+        StreamParser::json($url)->each(function (Collection $book) {
+
+            $report = $book->get('report');
+            $items = $report['movies'];
+
+            foreach ($items as $item) {
+                $get['title_ru'] = $item['title_ru'];
+                $get['title_en'] = $item['title_en'];
+                $get['year'] = $item['year'];
+                $get['duration'] = $item['duration'];
+                $get['kinopoisk_id'] = $item['kinopoisk_id'];
+                $get['world_art_id'] = $item['world_art_id'];
+                $get['pornolab_id'] = $item['pornolab_id'];
+                $get['token'] = $item['token'];
+                $get['type'] = $item['type'];
+                $get['camrip'] = $item['camrip'];
+                $get['source_type'] = $item['source_type'];
+                $get['source_quality_type'] = $item['source_quality_type'];
+                $get['instream_ads'] = $item['instream_ads'];
+                $get['directors_version'] = $item['directors_version'];
+                $get['iframe_url'] = $item['iframe_url'];
+                $get['trailer_token'] = $item['trailer_token'];
+                $get['trailer_iframe_url'] = $item['trailer_iframe_url'];
+                $get['translator'] = $item['translator'];
+                $get['translator_id'] = $item['translator_id'];
+                $get['added_at'] = $item['added_at'];
+                $get['category'] = $item['category'];
+                $get['material_data'] = isset($item['material_data']) ? $item['material_data'] : '';
+
+                // store data
+                $this->storeImportRu($get);
+
+            }
+
+//            $get['title_ru'] = $book->get('title_ru');
+//            $get['title_en'] = $book->get('title_en');
+//            $get['year'] = $book->get('year');
+//            $get['duration'] = !empty($book->get('duration')) ? json_encode($book->get('duration')->toArray(), JSON_UNESCAPED_UNICODE) : '';
+//            $get['kinopoisk_id'] = $book->get('kinopoisk_id');
+//            $get['world_art_id'] = $book->get('world_art_id');
+//            $get['pornolab_id'] = $book->get('pornolab_id');
+//            $get['token'] = $book->get('token');
+//            $get['type'] = $book->get('type');
+//            $get['camrip'] = $book->get('camrip');
+//            $get['source_type'] = $book->get('source_type');
+//            $get['source_quality_type'] = $book->get('source_quality_type');
+//            $get['instream_ads'] = $book->get('instream_ads');
+//            $get['directors_version'] = $book->get('directors_version');
+//            $get['iframe_url'] = $book->get('iframe_url');
+//            $get['trailer_token'] = $book->get('trailer_token');
+//            $get['trailer_iframe_url'] = $book->get('trailer_iframe_url');
+//            $get['translator'] = $book->get('translator');
+//            $get['translator_id'] = $book->get('translator_id');
+//            $get['added_at'] = $book->get('added_at');
+//            $get['category'] = $book->get('category');
+//            $get['material_data'] = !empty($book->get('material_data')) ? json_encode($book->get('material_data')->toArray(), JSON_UNESCAPED_UNICODE) : '';
+
+        });
+
+    }
+
+    protected function camrip($url)
+    {
+        $this->info('url: ' . $url);
+        $url = $this->storeFile($url);
+
+        StreamParser::json($url)->each(function (Collection $book) {
+
+            $report = $book->get('report');
+            $items = $report['movies'];
+
+            foreach ($items as $item) {
+                $get['title_ru'] = $item['title_ru'];
+                $get['title_en'] = $item['title_en'];
+                $get['year'] = $item['year'];
+                $get['duration'] = $item['duration'];
+                $get['kinopoisk_id'] = $item['kinopoisk_id'];
+                $get['world_art_id'] = $item['world_art_id'];
+                $get['pornolab_id'] = $item['pornolab_id'];
+                $get['token'] = $item['token'];
+                $get['type'] = $item['type'];
+                $get['camrip'] = $item['camrip'];
+                $get['source_type'] = $item['source_type'];
+                $get['source_quality_type'] = $item['source_quality_type'];
+                $get['instream_ads'] = $item['instream_ads'];
+                $get['directors_version'] = $item['directors_version'];
+                $get['iframe_url'] = $item['iframe_url'];
+                $get['trailer_token'] = $item['trailer_token'];
+                $get['trailer_iframe_url'] = $item['trailer_iframe_url'];
+                $get['translator'] = $item['translator'];
+                $get['translator_id'] = $item['translator_id'];
+                $get['added_at'] = $item['added_at'];
+                $get['category'] = $item['category'];
+                $get['material_data'] = isset($item['material_data']) ? $item['material_data'] : '';
+
+                // store data
+                $this->storeImportCamrip($get);
+
+            }
+
+//            $get['title_ru'] = $book->get('title_ru');
+//            $get['title_en'] = $book->get('title_en');
+//            $get['year'] = $book->get('year');
+//            $get['duration'] = !empty($book->get('duration')) ? json_encode($book->get('duration')->toArray(), JSON_UNESCAPED_UNICODE) : '';
+//            $get['kinopoisk_id'] = $book->get('kinopoisk_id');
+//            $get['world_art_id'] = $book->get('world_art_id');
+//            $get['pornolab_id'] = $book->get('pornolab_id');
+//            $get['token'] = $book->get('token');
+//            $get['type'] = $book->get('type');
+//            $get['camrip'] = $book->get('camrip');
+//            $get['source_type'] = $book->get('source_type');
+//            $get['source_quality_type'] = $book->get('source_quality_type');
+//            $get['instream_ads'] = $book->get('instream_ads');
+//            $get['directors_version'] = $book->get('directors_version');
+//            $get['iframe_url'] = $book->get('iframe_url');
+//            $get['trailer_token'] = $book->get('trailer_token');
+//            $get['trailer_iframe_url'] = $book->get('trailer_iframe_url');
+//            $get['translator'] = $book->get('translator');
+//            $get['translator_id'] = $book->get('translator_id');
+//            $get['added_at'] = $book->get('added_at');
+//            $get['category'] = $book->get('category');
+//            $get['material_data'] = !empty($book->get('material_data')) ? json_encode($book->get('material_data')->toArray(), JSON_UNESCAPED_UNICODE) : '';
+
+        });
+
     }
 
     protected function storeImport($data)
     {
 
+        $this->info('store movie');
+
         ImportMoonwalkForeign::firstOrcreate(
-            ['token' => $data['token']],
+            ['kinopoisk_id' => $data['kinopoisk_id']],
             [
                 'title_ru' => $data['title_ru'],
                 'title_en' => $data['title_en'],
@@ -186,6 +353,77 @@ class Moonwalk extends Command
 
         $this->storeOneFilm($data);
 
+    }
+
+    protected function storeImportRu($data)
+    {
+
+        $this->info('store movie');
+
+        ImportMoonwalkRussian::firstOrcreate(
+            ['kinopoisk_id' => $data['kinopoisk_id']],
+            [
+                'title_ru' => $data['title_ru'],
+                'title_en' => $data['title_en'],
+                'year' => $data['year'],
+                'duration' => $data['duration'],
+                'kinopoisk_id' => $data['kinopoisk_id'],
+                'world_art_id' => $data['world_art_id'],
+                'pornolab_id' => $data['pornolab_id'],
+                'token' => $data['token'],
+                'type' => $data['type'],
+                'camrip' => $data['camrip'],
+                'source_type' => $data['source_type'],
+                'source_quality_type' => $data['source_quality_type'],
+                'instream_ads' => $data['instream_ads'],
+                'directors_version' => $data['directors_version'],
+                'iframe_url' => $data['iframe_url'],
+                'trailer_token' => $data['trailer_token'],
+                'trailer_iframe_url' => $data['trailer_iframe_url'],
+                'translator' => $data['translator'],
+                'translator_id' => $data['translator_id'],
+                'added_at' => $data['added_at'],
+                'category' => $data['category'],
+                'material_data' => $data['material_data']
+            ]
+        );
+
+        $this->storeOneFilm($data);
+
+    }
+
+    protected function storeImportCamrip($data) {
+        $this->info('store movie');
+
+        ImportMoonwalkCamrip::firstOrcreate(
+            ['kinopoisk_id' => $data['kinopoisk_id']],
+            [
+                'title_ru' => $data['title_ru'],
+                'title_en' => $data['title_en'],
+                'year' => $data['year'],
+                'duration' => $data['duration'],
+                'kinopoisk_id' => $data['kinopoisk_id'],
+                'world_art_id' => $data['world_art_id'],
+                'pornolab_id' => $data['pornolab_id'],
+                'token' => $data['token'],
+                'type' => $data['type'],
+                'camrip' => $data['camrip'],
+                'source_type' => $data['source_type'],
+                'source_quality_type' => $data['source_quality_type'],
+                'instream_ads' => $data['instream_ads'],
+                'directors_version' => $data['directors_version'],
+                'iframe_url' => $data['iframe_url'],
+                'trailer_token' => $data['trailer_token'],
+                'trailer_iframe_url' => $data['trailer_iframe_url'],
+                'translator' => $data['translator'],
+                'translator_id' => $data['translator_id'],
+                'added_at' => $data['added_at'],
+                'category' => $data['category'],
+                'material_data' => $data['material_data']
+            ]
+        );
+
+        $this->storeOneFilm($data);
     }
 
     protected function storeFilms()
@@ -224,7 +462,7 @@ class Moonwalk extends Command
             // $poster
             $poster = $material_data->poster;
             // tagline
-            $tagline = $material_data->tagline;
+            $tagline = strlen($material_data->tagline) < 4 ? '' : $material_data->tagline;
             // description
             $description = $material_data->description;
             // kinopoisk_rating
@@ -297,7 +535,25 @@ class Moonwalk extends Command
                 }
             }
 
+            // studio
+            if (isset($material_data->studios)) {
+                foreach ($material_data->studios as $studio) {
+                    $studio_id = Studio::updateOrCreate(['name' => trim($studio)])->id;
+                    Film_studio::updateOrCreate(['film_id' => $film->id, 'studio_id' => $studio_id]);
+                }
+            }
+
         }
 
+    }
+
+    protected function storeFile($url){
+        $new_file = basename($url, "?api_token=".$this->token);
+
+        $file_data_begin = "[";
+        $file_data_end = "]";
+        file_put_contents(public_path($new_file), $file_data_begin . file_get_contents($url) . $file_data_end);
+
+        return url($new_file);
     }
 }

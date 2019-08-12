@@ -41,26 +41,25 @@ class MoviesController extends Controller
         foreach ($movie->FilmGenres as $item) {
             $genres[] = $item->Genre->name;
         }
-        $genres = implode(', ', $genres);
+        $genres = is_array($genres) ? implode(', ', $genres) : '';
 
         $actors = Null;
         foreach ($movie->FilmActors as $item) {
             $actors[] = $item->Actor->name;
         }
-        $actors = implode(', ', $actors);
+        $actors = is_array($actors) ? implode(', ', $actors) : '';
 
         $directors = Null;
         foreach ($movie->FilmDirectors as $item) {
             $directors[] = $item->Director->name;
         }
-        $directors = implode(', ', $directors);
+        $directors = is_array($directors) ? implode(', ', $directors) : '';
 
         $countries = Null;
         foreach ($movie->FilmCountries as $item) {
             $countries[] = $item->Country->name;
         }
-        $countries = implode(', ', $countries);
-
+        $countries = is_array($countries) ? implode(', ', $countries) : '';
 
         return view('movies.show', compact('movie', 'genres', 'actors', 'countries', 'directors'));
     }
