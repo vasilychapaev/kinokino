@@ -4,22 +4,16 @@
 </button>
 
 
-
 <!-- Topbar Search -->
-<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+<form action="/" method="post" id="FormSearch" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+    {{ csrf_field() }}
     <div class="input-group">
-        <form action="{{ url()->current() }}" method="post">
-            {{ csrf_field() }}
-            <input type="text" name="search" class="form-control bg-light border-0 small" placeholder="Поиск..." aria-label="Search" aria-describedby="basic-addon2">
-            <div class="input-group-append">
-                <button type="submit" class="btn btn-primary btn-sm" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                </button>
-            </div>
-        </form>
+        <input type="text" name="search" class="form-control bg-light border-0 small" placeholder="Поиск..." aria-label="Search" aria-describedby="basic-addon2">
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search fa-sm"></i></button>
+        </div>
     </div>
 </form>
-
 
 
 <!-- Topbar Navbar -->

@@ -17,6 +17,7 @@ Auth::routes();
 
 
 Route::match(['get', 'post'], '/', 'MoviesController@index');
+Route::post('search', 'MoviesController@search');
 Route::get('/category', 'MoviesController@category');
 Route::get('/movie/{slug}', 'MoviesController@show');
 //Route::get('/category/comedy', 'MoviesController@itemsGenre');

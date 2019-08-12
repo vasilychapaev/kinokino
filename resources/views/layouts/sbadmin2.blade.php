@@ -11,6 +11,9 @@
 
     <title>{{ config('app.name') }}</title>
 
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+
     <!-- Custom fonts for this template-->
 {{--    <link href="/themes/sbadmin2/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">--}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.min.css" integrity="sha256-UzFD2WYH2U1dQpKDjjZK72VtPeWP50NoJjd26rnAdUI=" crossorigin="anonymous" />
@@ -98,11 +101,14 @@
 <script src="/themes/sbadmin2/js/sb-admin-2.min.js"></script>
 
 <!-- Page level plugins -->
-<script src="/themes/sbadmin2/vendor/chart.js/Chart.min.js"></script>
-
+{{--<script src="/themes/sbadmin2/vendor/chart.js/Chart.min.js"></script>--}}
 <!-- Page level custom scripts -->
-<script src="/themes/sbadmin2/js/demo/chart-area-demo.js"></script>
-<script src="/themes/sbadmin2/js/demo/chart-pie-demo.js"></script>
+{{--<script src="/themes/sbadmin2/js/demo/chart-area-demo.js"></script>--}}
+{{--<script src="/themes/sbadmin2/js/demo/chart-pie-demo.js"></script>--}}
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js" integrity="sha256-KM512VNnjElC30ehFwehXjx1YCHPiQkOPmqnrWtpccM=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" integrity="sha256-rByPlHULObEjJ6XQxW/flG2r+22R5dKiAoef+aXWfik=" crossorigin="anonymous" />
+<script src="/js/script.js" defer></script>
 
 </body>
 
