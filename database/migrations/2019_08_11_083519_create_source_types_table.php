@@ -16,6 +16,7 @@ class CreateSourceTypesTable extends Migration
         Schema::create('source_types', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->index();
+            $table->string('slug')->nullable()->index();
             $table->timestamps();
         });
     }

@@ -8,6 +8,6 @@ class Type extends Model
 {
     //
     protected $table = 'types';
-    public $fillable = ['name'];
+    public $fillable = ['name', 'slug'];
     protected $dates = ['created_at', 'updated_at'];
 }

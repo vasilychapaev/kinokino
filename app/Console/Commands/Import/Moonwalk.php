@@ -446,13 +446,17 @@ class Moonwalk extends Command
     {
 
         // category
-        $category_id = Category::updateOrcreate(['name' => trim($array['category'])])->id;
+        $category_id = Category::updateOrcreate(['name' => trim($array['category'])],
+            ['slug' => str_slug($array['category'], '_', 'en')])->id;
         // type
-        $type_id = Type::updateOrcreate(['name' => trim($array['type'])])->id;
+        $type_id = Type::updateOrcreate(['name' => trim($array['type'])],
+            ['slug' => str_slug($array['type'], '_', 'en')])->id;
         // source_type
-        $source_type_id = Source_Type::updateOrcreate(['name' => trim($array['source_type'])])->id;
+        $source_type_id = Source_Type::updateOrcreate(['name' => trim($array['source_type'])],
+            ['slug' => str_slug($array['source_type'], '_', 'en')])->id;
         // translator
-        $translator_id = Translator::updateOrcreate(['name' => trim($array['translator'])])->id;
+        $translator_id = Translator::updateOrcreate(['name' => trim($array['translator'])],
+            ['slug' => str_slug($array['translator'], '_', 'en')])->id;
         // duration_human
         $duration_human = empty($array['duration']) ? '' : json_decode($array['duration'])->human;
 
@@ -512,7 +516,8 @@ class Moonwalk extends Command
             // countries
             if (isset($material_data->countries)) {
                 foreach ($material_data->countries as $country) {
-                    $country_id = Country::updateOrCreate(['name' => trim($country)])->id;
+                    $country_id = Country::updateOrCreate(['name' => trim($country)],
+                        ['slug' => str_slug(trim($country), '_', 'en')])->id;
                     Film_Country::updateOrCreate(['film_id' => $film->id, 'country_id' => $country_id]);
                 }
             }
@@ -520,7 +525,8 @@ class Moonwalk extends Command
             // actors
             if (isset($material_data->actors)) {
                 foreach ($material_data->actors as $actor) {
-                    $actor_id = Actor::updateOrCreate(['name' => trim($actor)])->id;
+                    $actor_id = Actor::updateOrCreate(['name' => trim($actor)],
+                        ['slug' => str_slug(trim($actor), '_', 'en')])->id;
                     Film_actor::updateOrCreate(['film_id' => $film->id, 'actor_id' => $actor_id]);
                 }
             }
@@ -528,7 +534,8 @@ class Moonwalk extends Command
             // directors
             if (isset($material_data->directors)) {
                 foreach ($material_data->directors as $director) {
-                    $director_id = Director::updateOrCreate(['name' => trim($director)])->id;
+                    $director_id = Director::updateOrCreate(['name' => trim($director)],
+                        ['slug' => str_slug(trim($director), '_', 'en')])->id;
                     Film_director::updateOrCreate(['film_id' => $film->id, 'director_id' => $director_id]);
                 }
             }
@@ -536,7 +543,8 @@ class Moonwalk extends Command
             // genres
             if (isset($material_data->genres)) {
                 foreach ($material_data->genres as $genre) {
-                    $genre_id = Genre::updateOrCreate(['name' => trim($genre)])->id;
+                    $genre_id = Genre::updateOrCreate(['name' => trim($genre)],
+                        ['slug' => str_slug(trim($genre), '_', 'en')])->id;
                     Film_genre::updateOrCreate(['film_id' => $film->id, 'genre_id' => $genre_id]);
                 }
             }
@@ -544,7 +552,8 @@ class Moonwalk extends Command
             // studio
             if (isset($material_data->studios)) {
                 foreach ($material_data->studios as $studio) {
-                    $studio_id = Studio::updateOrCreate(['name' => trim($studio)])->id;
+                    $studio_id = Studio::updateOrCreate(['name' => trim($studio)],
+                        ['slug' => str_slug(trim($studio), '_', 'en')])->id;
                     Film_studio::updateOrCreate(['film_id' => $film->id, 'studio_id' => $studio_id]);
                 }
             }

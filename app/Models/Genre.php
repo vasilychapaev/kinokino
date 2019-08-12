@@ -8,6 +8,6 @@ class Genre extends Model
 {
     //
     protected $table = 'genres';
-    public $fillable = ['name'];
+    public $fillable = ['name', 'slug'];
     protected $dates = ['created_at', 'updated_at'];
 }

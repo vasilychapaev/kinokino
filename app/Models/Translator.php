@@ -8,6 +8,6 @@ class Translator extends Model
 {
     //
     protected $table = 'translators';
-    public $fillable = ['name'];
+    public $fillable = ['name', 'slug'];
     protected $dates = ['created_at', 'updated_at'];
 }

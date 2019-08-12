@@ -16,6 +16,7 @@ class CreateTranslatorsTable extends Migration
         Schema::create('translators', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->nullable()->index();
+            $table->string('slug')->nullable()->index();
             $table->timestamps();
         });
     }

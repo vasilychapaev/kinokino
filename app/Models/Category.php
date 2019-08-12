@@ -8,6 +8,6 @@ class Category extends Model
 {
     //
     protected $table = 'categories';
-    public $fillable = ['name'];
+    public $fillable = ['name', 'slug'];
     protected $dates = ['created_at', 'updated_at'];
 }
