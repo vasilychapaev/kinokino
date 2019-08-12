@@ -41,7 +41,7 @@ class Moonwalk extends Command
      *
      * $var array
      */
-    protected $data_import = Null;
+    protected $data_import = null;
 
     /**
      * Create a new command instance.
@@ -68,10 +68,10 @@ class Moonwalk extends Command
         // for action in command
         $ask_array = [
             1 => ['name' => 'Foreign import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_foreign.json?api_token='],
-            2 => ['name' => 'Russian import from Moonwalk', 'url' => 'http://kino.test/import_.json']
+            2 => ['name' => 'Russian import from Moonwalk', 'url' => env('APP_URL') . '/import_.json']
         ];
 
-        $token = '6eb82f15e2d7c6cbb2fdcebd05a197a2';
+        $token = '000fa9e1bee1c7da7a1b74996d923405';
 
         // get pretty name
         foreach ($ask_array as $key => $value) {
@@ -145,7 +145,7 @@ class Moonwalk extends Command
             $get['translator_id'] = $book->get('translator_id');
             $get['added_at'] = $book->get('added_at');
             $get['category'] = $book->get('category');
-            $get['material_data'] = !empty($book->get('material_data')) ? json_encode($book->get('material_data')->toArray(), JSON_UNESCAPED_UNICODE ) : '';
+            $get['material_data'] = !empty($book->get('material_data')) ? json_encode($book->get('material_data')->toArray(), JSON_UNESCAPED_UNICODE) : '';
 
             // store data
             $this->storeImport($get);
@@ -218,22 +218,22 @@ class Moonwalk extends Command
         // duration_human
         $duration_human = empty($array['duration']) ? '' : json_decode($array['duration'])->human;
 
-        $poster = $tagline = $description = $kinopoisk_rating = $kinopoisk_votes = $age = Null;
-        if ( !empty($array['material_data']) ) {
-                $material_data = json_decode($array['material_data']);
-                // $poster
-                $poster = $material_data->poster;
-                // tagline
-                $tagline = $material_data->tagline;
-                // description
-                $description = $material_data->description;
-                // kinopoisk_rating
-                $kinopoisk_rating = $material_data->kinopoisk_rating;
-                // kinopoisk_votes
-                $kinopoisk_votes = $material_data->kinopoisk_votes;
-                // age
-                $age = $material_data->age;
-            }
+        $poster = $tagline = $description = $kinopoisk_rating = $kinopoisk_votes = $age = null;
+        if (!empty($array['material_data'])) {
+            $material_data = json_decode($array['material_data']);
+            // $poster
+            $poster = $material_data->poster;
+            // tagline
+            $tagline = $material_data->tagline;
+            // description
+            $description = $material_data->description;
+            // kinopoisk_rating
+            $kinopoisk_rating = $material_data->kinopoisk_rating;
+            // kinopoisk_votes
+            $kinopoisk_votes = $material_data->kinopoisk_votes;
+            // age
+            $age = $material_data->age;
+        }
 
         // add film
         $film = Film::updateOrcreate(
@@ -264,9 +264,9 @@ class Moonwalk extends Command
 
             ]);
 
-        if ( !empty($material_data) ) {
+        if (!empty($material_data)) {
             // countries
-            if ( isset($material_data->countries)) {
+            if (isset($material_data->countries)) {
                 foreach ($material_data->countries as $country) {
                     $country_id = Country::updateOrCreate(['name' => trim($country)])->id;
                     Film_Country::updateOrCreate(['film_id' => $film->id, 'country_id' => $country_id]);
@@ -274,7 +274,7 @@ class Moonwalk extends Command
             }
 
             // actors
-            if ( isset($material_data->actors)) {
+            if (isset($material_data->actors)) {
                 foreach ($material_data->actors as $actor) {
                     $actor_id = Actor::updateOrCreate(['name' => trim($actor)])->id;
                     Film_actor::updateOrCreate(['film_id' => $film->id, 'actor_id' => $actor_id]);
@@ -282,7 +282,7 @@ class Moonwalk extends Command
             }
 
             // directors
-            if ( isset($material_data->directors)) {
+            if (isset($material_data->directors)) {
                 foreach ($material_data->directors as $director) {
                     $director_id = Director::updateOrCreate(['name' => trim($director)])->id;
                     Film_director::updateOrCreate(['film_id' => $film->id, 'director_id' => $director_id]);
@@ -290,7 +290,7 @@ class Moonwalk extends Command
             }
 
             // genres
-            if ( isset($material_data->genres)) {
+            if (isset($material_data->genres)) {
                 foreach ($material_data->genres as $genre) {
                     $genre_id = Genre::updateOrCreate(['name' => trim($genre)])->id;
                     Film_genre::updateOrCreate(['film_id' => $film->id, 'genre_id' => $genre_id]);
