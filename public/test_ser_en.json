@@ -1,0 +1,180 @@
+[{
+  "report": {
+    "report_name": "serials_foreign",
+    "generated_at": 1565643711,
+    "total_count": 8387,
+    "serials": [
+      {
+        "title_ru": "1001 ночь / Тысяча и одна ночь",
+        "title_en": "1001 gece / BinBir Gece",
+        "year": 2006,
+        "token": "dfe050775958ea0a5055ea424f254621",
+        "type": "serial",
+        "kinopoisk_id": 471742,
+        "world_art_id": null,
+        "translator": "Дубляж",
+        "translator_id": 21,
+        "iframe_url": "http://moonwalk.cc/serial/dfe050775958ea0a5055ea424f254621/iframe",
+        "trailer_token": "fb2185a7e2971121",
+        "trailer_iframe_url": "https://trailerclub.me/video/fb2185a7e2971121/iframe",
+        "seasons_count": 3,
+        "episodes_count": 90,
+        "category": null,
+        "block": {
+          "blocked_at": null,
+          "block_ru": false,
+          "block_ua": false
+        },
+        "season_episodes_count": [
+          {
+            "season_number": 1,
+            "episodes_count": 29,
+            "episodes": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29
+            ]
+          },
+          {
+            "season_number": 2,
+            "episodes_count": 37,
+            "episodes": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24,
+              25,
+              26,
+              27,
+              28,
+              29,
+              30,
+              31,
+              32,
+              33,
+              34,
+              35,
+              36,
+              37
+            ]
+          },
+          {
+            "season_number": 3,
+            "episodes_count": 24,
+            "episodes": [
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7,
+              8,
+              9,
+              10,
+              11,
+              12,
+              13,
+              14,
+              15,
+              16,
+              17,
+              18,
+              19,
+              20,
+              21,
+              22,
+              23,
+              24
+            ]
+          }
+        ],
+        "material_data": {
+          "updated_at": "2019-03-15 03:04:34",
+          "poster": "https://st.kp.yandex.net/images/film_iphone/iphone360_471742.jpg",
+          "year": 2006,
+          "tagline": "-",
+          "description": "Убитая душевными переживаниями Шахерезада узнаёт о том, что жизнь её сына висит на волоске. Он страшно болеет. Есть способ излечиться, но процент положительного эффекта невелик. Героиня борется с этим в одиночку. Её муж скоропостижно покинул этот мир, её сын - единственная радость. Не получившая помощи от родителей супруга Шахерезада принимает заманчивое предложение от своего босса Онура...",
+          "age": 0,
+          "countries": [
+            "Турция"
+          ],
+          "genres": [
+            "драма",
+            "семейный"
+          ],
+          "actors": [
+            "Халит Эргенч",
+            "Бергюзар Корель",
+            "Тарду Флордун",
+            "Джейда Дювенджи",
+            "Томрис Инджер",
+            "Метин Чекмез",
+            "Эргюн Демир",
+            "Йонджа Джевхер",
+            "Айтач Озтуна",
+            "Мераль Четинкая"
+          ],
+          "directors": [
+            "Кудрет Сабанджи"
+          ],
+          "studios": [
+            "TMC Film"
+          ],
+          "kinopoisk_rating": 7.612,
+          "kinopoisk_votes": 1004,
+          "imdb_rating": 5.3,
+          "imdb_votes": 2591,
+          "mpaa_rating": null,
+          "mpaa_votes": null
+        }
+      }
+    ]
+  }
+}]

@@ -16,10 +16,13 @@ use App\Models\Genre;
 use App\Models\ImportMoonwalkCamrip;
 use App\Models\ImportMoonwalkForeign;
 use App\Models\ImportMoonwalkRussian;
+use App\Models\ImportMoonwalkSerial;
+use App\Models\Season_episodes_count;
 use App\Models\Source_Type;
 use App\Models\Studio;
 use App\Models\Translator;
 use App\Models\Type;
+use Carbon\Carbon;
 use Illuminate\Console\Command;
 use Rodenastyle\StreamParser\StreamParser;
 use Tightenco\Collect\Support\Collection;
@@ -67,6 +70,8 @@ class Moonwalk extends Command
     {
         ini_set('memory_limit', '2000M');
 
+        $start = Carbon::now();
+
         // display class name
         $this->info(__CLASS__);
 
@@ -75,7 +80,9 @@ class Moonwalk extends Command
             1 => ['name' => 'Foreign import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_foreign.json?api_token='],
             2 => ['name' => 'Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_russian.json?api_token='],
             3 => ['name' => 'Camrips import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_camrip.json?api_token='],
-            4 => ['name' => 'Test File', 'url' => env('APP_URL') . '/test.json'],
+            4 => ['name' => 'Serials import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_foreign.json?api_token='],
+            5 => ['name' => 'Serials Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_russian.json?api_token='],
+            6 => ['name' => 'Test File', 'url' => env('APP_URL') . '/test_ser_en.json'],
         ];
 
         $token = $this->token;
@@ -111,11 +118,28 @@ class Moonwalk extends Command
 
         } elseif (in_array($ask, [4])) {
 
-            $this->foreign($ask_array[$ask]['url']);
+            $this->serial($ask_array[$ask]['url']  . $token);
+
+        } elseif (in_array($ask, [5])) {
+
+            $this->serialRus($ask_array[$ask]['url'] . $token);
+
+        } elseif (in_array($ask, [6])) {
+
+            $this->serial($ask_array[$ask]['url']);
 
         } else {
             $this->error('No action');
+            return False;
         }
+
+        $finish = Carbon::now();
+
+        $this->info('DONE '. $ask_array[$ask]['name']);
+        $this->info('started at '. $start);
+        $this->info('finished at '. $finish);
+        $this->info('spent time: '. $start->diffForHumans($finish));
+        return True;
 
 
     }
@@ -128,9 +152,19 @@ class Moonwalk extends Command
         StreamParser::json($url)->each(function (Collection $book) {
 
             $report = $book->get('report');
+
+            $this->info('report: ' . $report['report_name']);
+            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+            $this->info('count: ' . $report['total_count']);
+
             $items = $report['movies'];
 
+            $bar = $this->output->createProgressBar($report['total_count']);
+
             foreach ($items as $item) {
+
+                $bar->advance();
+
                 $get['title_ru'] = $item['title_ru'];
                 $get['title_en'] = $item['title_en'];
                 $get['year'] = $item['year'];
@@ -158,6 +192,8 @@ class Moonwalk extends Command
                 $this->storeImport($get);
 
             }
+
+            $bar->finish();
 
 //            $get['title_ru'] = $book->get('title_ru');
 //            $get['title_en'] = $book->get('title_en');
@@ -194,9 +230,19 @@ class Moonwalk extends Command
         StreamParser::json($url)->each(function (Collection $book) {
 
             $report = $book->get('report');
+
+            $this->info('report: ' . $report['report_name']);
+            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+            $this->info('count: ' . $report['total_count']);
+
             $items = $report['movies'];
 
+            $bar = $this->output->createProgressBar($report['total_count']);
+
             foreach ($items as $item) {
+
+                $bar->advance();
+
                 $get['title_ru'] = $item['title_ru'];
                 $get['title_en'] = $item['title_en'];
                 $get['year'] = $item['year'];
@@ -225,28 +271,7 @@ class Moonwalk extends Command
 
             }
 
-//            $get['title_ru'] = $book->get('title_ru');
-//            $get['title_en'] = $book->get('title_en');
-//            $get['year'] = $book->get('year');
-//            $get['duration'] = !empty($book->get('duration')) ? json_encode($book->get('duration')->toArray(), JSON_UNESCAPED_UNICODE) : '';
-//            $get['kinopoisk_id'] = $book->get('kinopoisk_id');
-//            $get['world_art_id'] = $book->get('world_art_id');
-//            $get['pornolab_id'] = $book->get('pornolab_id');
-//            $get['token'] = $book->get('token');
-//            $get['type'] = $book->get('type');
-//            $get['camrip'] = $book->get('camrip');
-//            $get['source_type'] = $book->get('source_type');
-//            $get['source_quality_type'] = $book->get('source_quality_type');
-//            $get['instream_ads'] = $book->get('instream_ads');
-//            $get['directors_version'] = $book->get('directors_version');
-//            $get['iframe_url'] = $book->get('iframe_url');
-//            $get['trailer_token'] = $book->get('trailer_token');
-//            $get['trailer_iframe_url'] = $book->get('trailer_iframe_url');
-//            $get['translator'] = $book->get('translator');
-//            $get['translator_id'] = $book->get('translator_id');
-//            $get['added_at'] = $book->get('added_at');
-//            $get['category'] = $book->get('category');
-//            $get['material_data'] = !empty($book->get('material_data')) ? json_encode($book->get('material_data')->toArray(), JSON_UNESCAPED_UNICODE) : '';
+            $bar->finish();
 
         });
 
@@ -260,9 +285,19 @@ class Moonwalk extends Command
         StreamParser::json($url)->each(function (Collection $book) {
 
             $report = $book->get('report');
+
+            $this->info('report: ' . $report['report_name']);
+            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+            $this->info('count: ' . $report['total_count']);
+
             $items = $report['movies'];
 
+            $bar = $this->output->createProgressBar($report['total_count']);
+
             foreach ($items as $item) {
+
+                $bar->advance();
+
                 $get['title_ru'] = $item['title_ru'];
                 $get['title_en'] = $item['title_en'];
                 $get['year'] = $item['year'];
@@ -291,28 +326,115 @@ class Moonwalk extends Command
 
             }
 
-//            $get['title_ru'] = $book->get('title_ru');
-//            $get['title_en'] = $book->get('title_en');
-//            $get['year'] = $book->get('year');
-//            $get['duration'] = !empty($book->get('duration')) ? json_encode($book->get('duration')->toArray(), JSON_UNESCAPED_UNICODE) : '';
-//            $get['kinopoisk_id'] = $book->get('kinopoisk_id');
-//            $get['world_art_id'] = $book->get('world_art_id');
-//            $get['pornolab_id'] = $book->get('pornolab_id');
-//            $get['token'] = $book->get('token');
-//            $get['type'] = $book->get('type');
-//            $get['camrip'] = $book->get('camrip');
-//            $get['source_type'] = $book->get('source_type');
-//            $get['source_quality_type'] = $book->get('source_quality_type');
-//            $get['instream_ads'] = $book->get('instream_ads');
-//            $get['directors_version'] = $book->get('directors_version');
-//            $get['iframe_url'] = $book->get('iframe_url');
-//            $get['trailer_token'] = $book->get('trailer_token');
-//            $get['trailer_iframe_url'] = $book->get('trailer_iframe_url');
-//            $get['translator'] = $book->get('translator');
-//            $get['translator_id'] = $book->get('translator_id');
-//            $get['added_at'] = $book->get('added_at');
-//            $get['category'] = $book->get('category');
-//            $get['material_data'] = !empty($book->get('material_data')) ? json_encode($book->get('material_data')->toArray(), JSON_UNESCAPED_UNICODE) : '';
+            $bar->finish();
+
+        });
+
+    }
+
+    protected function serial($url)
+    {
+        $this->info('url: ' . $url);
+        $url = $this->storeFile($url);
+
+        StreamParser::json($url)->each(function (Collection $book) {
+
+            $report = $book->get('report');
+
+            $this->info('report: ' . $report['report_name']);
+            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+            $this->info('count: ' . $report['total_count']);
+
+            $items = $report['serials'];
+
+            $bar = $this->output->createProgressBar($report['total_count']);
+
+            foreach ($items as $item) {
+
+                $bar->advance();
+
+                $get['title_ru'] = $item['title_ru'];
+                $get['title_en'] = $item['title_en'];
+                $get['year'] = $item['year'];
+                $get['token'] = $item['token'];
+                $get['type'] = $item['type'];
+                $get['kinopoisk_id'] = $item['kinopoisk_id'];
+                $get['world_art_id'] = $item['world_art_id'];
+                $get['translator'] = $item['translator'];
+                $get['translator_id'] = $item['translator_id'];
+                $get['iframe_url'] = $item['iframe_url'];
+                $get['trailer_token'] = $item['trailer_token'];
+                $get['trailer_iframe_url'] = $item['trailer_iframe_url'];
+                $get['seasons_count'] = $item['seasons_count'];
+                $get['episodes_count'] = $item['episodes_count'];
+                $get['category'] = $item['category'];
+                $get['block'] = $item['block'];
+                $get['season_episodes_count'] = isset($item['material_data']) ? json_encode($item['season_episodes_count']) : '';
+                $get['material_data'] = isset($item['material_data']) ? $item['material_data'] : '';
+                $get['source_type'] = Null;
+                $get['duration'] = Null;
+                $get['added_at'] = Null;
+
+                // store data
+                $this->storeImportSerial($get);
+
+            }
+
+            $bar->finish();
+
+        });
+
+    }
+
+    protected function serialRus($url)
+    {
+        $this->info('url: ' . $url);
+        $url = $this->storeFile($url);
+
+        StreamParser::json($url)->each(function (Collection $book) {
+
+            $report = $book->get('report');
+
+            $this->info('report: ' . $report['report_name']);
+            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+            $this->info('count: ' . $report['total_count']);
+
+            $items = $report['serials'];
+
+            $bar = $this->output->createProgressBar($report['total_count']);
+
+            foreach ($items as $item) {
+
+                $bar->advance();
+
+                $get['title_ru'] = $item['title_ru'];
+                $get['title_en'] = $item['title_en'];
+                $get['year'] = $item['year'];
+                $get['token'] = $item['token'];
+                $get['type'] = $item['type'];
+                $get['kinopoisk_id'] = $item['kinopoisk_id'];
+                $get['world_art_id'] = $item['world_art_id'];
+                $get['translator'] = $item['translator'];
+                $get['translator_id'] = $item['translator_id'];
+                $get['iframe_url'] = $item['iframe_url'];
+                $get['trailer_token'] = $item['trailer_token'];
+                $get['trailer_iframe_url'] = $item['trailer_iframe_url'];
+                $get['seasons_count'] = $item['seasons_count'];
+                $get['episodes_count'] = $item['episodes_count'];
+                $get['category'] = $item['category'];
+                $get['block'] = $item['block'];
+                $get['season_episodes_count'] = isset($item['material_data']) ? json_encode($item['season_episodes_count']) : '';
+                $get['material_data'] = isset($item['material_data']) ? $item['material_data'] : '';
+                $get['source_type'] = Null;
+                $get['duration'] = Null;
+                $get['added_at'] = Null;
+
+                // store data
+                $this->storeImportSerialRus($get);
+
+            }
+
+            $bar->finish();
 
         });
 
@@ -426,21 +548,89 @@ class Moonwalk extends Command
         $this->storeOneFilm($data);
     }
 
-    protected function storeFilms()
-    {
+    protected function storeImportSerial($data) {
+        $this->info('store movie');
 
-        ImportMoonwalkForeign::chunk('500', function ($imports) {
-            $count = count($imports);
-            $bar = $this->output->createProgressBar($count);
-            foreach ($imports as $import) {
-                $bar->advance();
-                $data = $import->toArray();
-                $this->storeOneFilm($data);
-            }
-            $bar->finish();
-        });
+        ImportMoonwalkSerial::firstOrcreate(
+            ['kinopoisk_id' => $data['kinopoisk_id']],
+            [
+                'title_ru' => $data['title_ru'],
+                'title_en' => $data['title_en'],
+                'year' => $data['year'],
+                'token' => $data['token'],
+                'type' => $data['type'],
+                'kinopoisk_id' => $data['kinopoisk_id'],
+                'world_art_id' => $data['world_art_id'],
+                'translator' => $data['translator'],
+                'translator_id' => $data['translator_id'],
+                'iframe_url' => $data['iframe_url'],
+                'trailer_token' => $data['trailer_token'],
+                'trailer_iframe_url' => $data['trailer_iframe_url'],
+                'seasons_count' => $data['seasons_count'],
+                'episodes_count' => $data['episodes_count'],
+                'category' => $data['category'],
+                'block' => $data['block'],
+                'season_episodes_count' => $data['season_episodes_count'],
+                'material_data' => $data['material_data'],
+                'source_type' => $data['source_type'],
+                'duration' => $data['duration'],
+                'added_at' => $data['added_at'],
 
+            ]
+        );
+
+        $this->storeOneFilm($data);
     }
+
+    protected function storeImportSerialRus($data) {
+        $this->info('store movie');
+
+        ImportMoonwalkSerial::firstOrcreate(
+            ['kinopoisk_id' => $data['kinopoisk_id']],
+            [
+                'title_ru' => $data['title_ru'],
+                'title_en' => $data['title_en'],
+                'year' => $data['year'],
+                'token' => $data['token'],
+                'type' => $data['type'],
+                'kinopoisk_id' => $data['kinopoisk_id'],
+                'world_art_id' => $data['world_art_id'],
+                'translator' => $data['translator'],
+                'translator_id' => $data['translator_id'],
+                'iframe_url' => $data['iframe_url'],
+                'trailer_token' => $data['trailer_token'],
+                'trailer_iframe_url' => $data['trailer_iframe_url'],
+                'seasons_count' => $data['seasons_count'],
+                'episodes_count' => $data['episodes_count'],
+                'category' => $data['category'],
+                'block' => $data['block'],
+                'season_episodes_count' => $data['season_episodes_count'],
+                'material_data' => $data['material_data'],
+                'source_type' => $data['source_type'],
+                'duration' => $data['duration'],
+                'added_at' => $data['added_at'],
+
+            ]
+        );
+
+        $this->storeOneFilm($data);
+    }
+
+//    protected function storeFilms()
+//    {
+//
+//        ImportMoonwalkForeign::chunk('500', function ($imports) {
+//            $count = count($imports);
+//            $bar = $this->output->createProgressBar($count);
+//            foreach ($imports as $import) {
+//                $bar->advance();
+//                $data = $import->toArray();
+//                $this->storeOneFilm($data);
+//            }
+//            $bar->finish();
+//        });
+//
+//    }
 
     protected function storeOneFilm($array)
     {
@@ -452,8 +642,11 @@ class Moonwalk extends Command
         $type_id = Type::updateOrcreate(['name' => trim($array['type'])],
             ['slug' => str_slug($array['type'], '_', 'en')])->id;
         // source_type
-        $source_type_id = Source_Type::updateOrcreate(['name' => trim($array['source_type'])],
-            ['slug' => str_slug($array['source_type'], '_', 'en')])->id;
+        $source_type_id = Null;
+        if (!empty($array['source_type'])) {
+            $source_type_id = Source_Type::updateOrcreate(['name' => trim($array['source_type'])],
+                ['slug' => str_slug($array['source_type'], '_', 'en')])->id;
+        }
         // translator
         $translator_id = Translator::updateOrcreate(['name' => trim($array['translator'])],
             ['slug' => str_slug($array['translator'], '_', 'en')])->id;
@@ -558,6 +751,15 @@ class Moonwalk extends Command
                 }
             }
 
+        }
+
+        if ( isset($array['season_episodes_count']) && !empty($array['season_episodes_count']) ) {
+
+            foreach (json_decode($array['season_episodes_count']) as $item) {
+
+                Season_episodes_count::updateOrCreate(['film_id' => $film->id, 'season_number' => $item->season_number],
+                    ['episodes_count' => $item->episodes_count, 'episodes' => json_encode($item->episodes)]);
+            }
         }
 
     }

@@ -19,7 +19,7 @@ class CreateImportMoonwalkForeignsTable extends Migration
             $table->string('title_en')->nullable();
             $table->string('year')->nullable();
             $table->string('duration')->nullable();
-            $table->string('kinopoisk_id')->nullable();
+            $table->integer('kinopoisk_id')->nullable()->index();
             $table->string('world_art_id')->nullable();
             $table->string('pornolab_id')->nullable();
             $table->string('token')->nullable();

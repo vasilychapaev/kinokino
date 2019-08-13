@@ -14,4 +14,8 @@ class Film_studio extends Model
     public function Studio() {
         return $this->hasOne(Studio::class, 'id', 'studio_id');
     }
+
+    public function Film() {
+        return $this->belongsTo(Film::class, 'id', 'film_id');
+    }
 }

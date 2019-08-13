@@ -15,4 +15,8 @@ class Film_country extends Model
         return $this->hasOne(Country::class, 'id', 'country_id');
     }
 
+    public function Film() {
+        return $this->belongsTo(Film::class, 'id', 'film_id');
+    }
+
 }

@@ -8,6 +8,6 @@ class Source_Type extends Model
 {
     //
     protected $table = 'source_types';
-    public $fillable = ['name'];
+    public $fillable = ['name', 'slug'];
     protected $dates = ['created_at', 'updated_at'];
 }

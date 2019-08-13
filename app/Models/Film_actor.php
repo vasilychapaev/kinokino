@@ -15,4 +15,8 @@ class Film_actor extends Model
         return $this->hasOne(Actor::class, 'id', 'actor_id');
     }
 
+    public function Film() {
+        return $this->belongsTo(Film::class, 'id', 'film_id');
+    }
+
 }
