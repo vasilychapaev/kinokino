@@ -583,7 +583,6 @@ class Moonwalk extends Command
     }
 
     protected function storeImportSerialRus($data) {
-        $this->info('store movie');
 
         ImportMoonwalkSerial::firstOrcreate(
             ['kinopoisk_id' => $data['kinopoisk_id']],
