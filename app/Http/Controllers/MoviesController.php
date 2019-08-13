@@ -125,6 +125,9 @@ class MoviesController extends Controller
         $movie = Film::where('slug', $slug)->with('FilmGenres')->with('FilmDirectors')
             ->with('FilmActors')->with('FilmCountries')->firstOrFail();
 
+        // https fix
+        $movie->iframe_url = str_replace('http://moonwalk.cc', 'https://protectorat.cc', $movie->iframe_url);
+
         $genres = null;
         foreach ($movie->FilmGenres as $item) {
             $genres[] = '<a href="'.url('genre/'.$item->Genre->slug).'">'.$item->Genre->name.'</a>';
