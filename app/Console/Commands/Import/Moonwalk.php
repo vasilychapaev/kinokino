@@ -8,7 +8,7 @@ use App\Models\Country;
 use App\Models\Director;
 use App\Models\Film;
 use App\Models\Film_actor;
-use App\Models\Film_Country;
+use App\Models\Film_country;
 use App\Models\Film_director;
 use App\Models\Film_genre;
 use App\Models\Film_studio;
