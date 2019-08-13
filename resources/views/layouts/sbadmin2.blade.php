@@ -22,6 +22,18 @@
     <!-- Custom styles for this template-->
     <link href="/themes/sbadmin2/css/sb-admin-2.min.css" rel="stylesheet">
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7Q58KBTYMP"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-7Q58KBTYMP');
+    </script>
+
+
+
 </head>
 
 <body id="page-top">
