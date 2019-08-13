@@ -26,8 +26,8 @@
             <h4>{{ $movie->tagline }}</h4>
             <h5>{{ $movie->description }}</h5>
 
-        <!-- Trailer.player -->
-        @if ($movie->trailer_iframe_url)
+            <!-- Trailer.player -->
+            @if ($movie->trailer_iframe_url)
             <hr />
             <h4>Трейлер к {{ $movie->title_ru }}</h4>
             <div class="card shadow mb-4" >
@@ -41,8 +41,9 @@
                 </div>
 
             </div>
+            @endif
         </div>
-        @endif
+
 
         <!-- Poster -->
         <div class="col-lg-3">
