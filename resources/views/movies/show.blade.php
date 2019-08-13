@@ -51,13 +51,13 @@
                      style="max-height: 375px">
             </div>
 
-            @if($genres)<p>Жанры: {{ $genres }}</p>@endif
-            @if($movie->year)<p>Год: {{ $movie->year }}</p>@endif
+            @if($genres)<p>Жанры: {!! $genres !!}</p>@endif
+            @if($movie->year)<p>Год: {!! $year !!}</p>@endif
             @if($movie->kinopoisk_rating)<p>Рейтинг: {{ $movie->kinopoisk_rating }}</p>@endif
             @if($movie->kinopoisk_votes)<p>Голосов: {{ $movie->kinopoisk_votes }}</p>@endif
-            @if($actors)<p>Актеры: {{ $actors }}</p>@endif
-            @if($directors)<p>Директор: {{ $directors }}</p>@endif
-            @if($countries)<p>Страна: {{ $countries }}</p>@endif
+            @if($actors)<p>Актеры: {!! $actors !!}</p>@endif
+            @if($directors)<p>Директор: {!! $directors !!}</p>@endif
+            @if($countries)<p>Страна: {!! $countries !!}</p>@endif
             @if($movie->age)<p>Возраст: {{ $movie->age }}</p>@endif
         </div>
 

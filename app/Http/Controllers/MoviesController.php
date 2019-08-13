@@ -2,28 +2,99 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Actor;
+use App\Models\Country;
+use App\Models\Director;
 use App\Models\Film;
+use App\Models\Genre;
 use Illuminate\Http\Request;
 
 class MoviesController extends Controller
 {
-    public function index(Request $request)
+    public function index($type, $slug)
     {
 
-        $search = $request->search;
+        $title = 'Новинки на сайте';
 
-        $movies = Film::where(function ($q) use ($search) {
-            $q->whereNotNull('poster');
-            if ($search) {
-                $q->where('title_ru', 'like', '%' . $search . '%');
-                $q->orWhere('title_en', 'like', '%' . $search . '%');
-            }
+        $movies = Film::whereNotNull('poster');
 
-        })->limit(30)->orderby('updated_at', 'DESC')->pluck('poster', 'slug');
+        if ($type == 'search') {
 
-        $title = $search ? 'Результаты поиска по: ' . $search : 'Новинки на сайте';
+            $movies->where(function ($q) use ($type, $slug) {
+                $q->where('title_ru', 'like', '%' . $slug . '%');
+                $q->orWhere('title_en', 'like', '%' . $slug . '%');
+            });
+
+            $title = 'Поиск по ' . $slug;
+
+        }
+
+        if ($type == 'year') {
+
+            $movies->where(function ($q) use ($type, $slug) {
+                $q->where('year', $slug);
+            });
+
+            $title = 'Поиск по ' . $slug . ' году';
+
+        }
+
+        if ($type == 'genre') {
+
+            $title = 'Результаты поиска по ' . Genre::where('slug', $slug)->firstOrFail()->name;
+
+            $movies->whereHas('FilmGenres.Genre', function ($q) use ($slug) {
+                $q->where('slug', $slug);
+            });
+        }
+
+        if ($type == 'actor') {
+
+            $title = 'Результаты поиска по ' . Actor::where('slug', $slug)->firstOrFail()->name;
+
+            $movies->whereHas('FilmActors.Actor', function ($q) use ($slug) {
+                $q->where('slug', $slug);
+            });
+        }
+
+        if ($type == 'country') {
+
+            $title = 'Результаты поиска по ' . Country::where('slug', $slug)->firstOrFail()->name;
+
+            $movies->whereHas('FilmCountries.Country', function ($q) use ($slug) {
+                $q->where('slug', $slug);
+            });
+        }
+
+        if ($type == 'director') {
+
+            $title = 'Результаты поиска по ' . Director::where('slug', $slug)->firstOrFail()->name;
+
+            $movies->whereHas('FilmDirectors.Director', function ($q) use ($slug) {
+                $q->where('slug', $slug);
+            });
+        }
+
+        $movies = $movies->limit(30)->orderby('updated_at', 'DESC')->pluck('poster', 'slug');
 
         return view('movies.index', compact('movies', 'title'));
+    }
+
+    public function main(Request $request) {
+
+        $search = $request->search;
+        $type = $search ? 'search' : '';
+        return $this->index($type, $search);
+
+    }
+
+    public function cat($type, $slug)
+    {
+        if ($type == 'movie') {
+            return $this->show($slug);
+        } else {
+            return $this->index($type, $slug);
+        }
     }
 
     public function search(Request $request)
@@ -56,29 +127,31 @@ class MoviesController extends Controller
 
         $genres = null;
         foreach ($movie->FilmGenres as $item) {
-            $genres[] = $item->Genre->name;
+            $genres[] = '<a href="'.url('genre/'.$item->Genre->slug).'">'.$item->Genre->name.'</a>';
         }
         $genres = is_array($genres) ? implode(', ', $genres) : '';
 
         $actors = null;
         foreach ($movie->FilmActors as $item) {
-            $actors[] = $item->Actor->name;
+            $actors[] = '<a href="'.url('actor/'.$item->Actor->slug).'">'.$item->Actor->name.'</a>';
         }
         $actors = is_array($actors) ? implode(', ', $actors) : '';
 
         $directors = null;
         foreach ($movie->FilmDirectors as $item) {
-            $directors[] = $item->Director->name;
+            $directors[] = '<a href="'.url('director/'.$item->Director->slug).'">'.$item->Director->name.'</a>';
         }
-        $directors = is_array($directors) ? implode(', ', $directors) : '';
+        $directors = is_array($directors) ? htmlspecialchars_decode(implode(', ', $directors)) : '';
 
         $countries = null;
         foreach ($movie->FilmCountries as $item) {
-            $countries[] = $item->Country->name;
+            $countries[] = '<a href="'.url('country/'.$item->Country->slug).'">'.$item->Country->name.'</a>';
         }
         $countries = is_array($countries) ? implode(', ', $countries) : '';
 
-        return view('movies.show', compact('movie', 'genres', 'actors', 'countries', 'directors'));
+        $year = '<a href="'.url('year/'.$movie->year).'">'.$movie->year.'</a>';
+
+        return view('movies.show', compact('movie', 'genres', 'actors', 'countries', 'directors', 'year'));
     }
 
 }

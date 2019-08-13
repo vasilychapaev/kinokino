@@ -16,9 +16,12 @@ Auth::routes();
 //Route::get('/home', 'HomeController@index')->name('home');
 
 
-Route::match(['get', 'post'], '/', 'MoviesController@index');
+Route::match(['get', 'post'], '/', 'MoviesController@main');
 Route::post('search', 'MoviesController@search');
-Route::get('/category', 'MoviesController@category');
-Route::get('/movie/{slug}', 'MoviesController@show');
+Route::get('category', 'MoviesController@category');
+//Route::get('/movie/{slug}', 'MoviesController@show');
+Route::get('{type}/{slug}', 'MoviesController@cat');
+
+
 //Route::get('/category/comedy', 'MoviesController@itemsGenre');
 //Route::get('/serials/comedy', 'MoviesController@itemsGenre');
