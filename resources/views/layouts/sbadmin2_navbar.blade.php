@@ -35,9 +35,10 @@
         </a>
         <!-- Dropdown - Messages -->
         <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-            <form class="form-inline mr-auto w-100 navbar-search">
+            <form action="/" method="post" class="form-inline mr-auto w-100 navbar-search">
+                {{ csrf_field() }}
                 <div class="input-group">
-                    <input type="text" class="form-control bg-light border-0 small" placeholder="Поиск..." aria-label="Search" aria-describedby="basic-addon2">
+                    <input name="search" type="text" class="form-control bg-light border-0 small" placeholder="Поиск..." aria-label="Search" aria-describedby="basic-addon2">
                     <div class="input-group-append">
                         <button class="btn btn-primary btn-sm" type="button">
                             <i class="fas fa-search fa-sm"></i>

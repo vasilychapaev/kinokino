@@ -49,7 +49,7 @@
         <div class="col-lg-3">
             <div class="card shadow mb-4">
                 <img src="{{ $movie->poster }}" class="card-img-top card-img-bottom" alt="..."
-                     style="max-height: 375px">
+                     {{--style="max-height: 375px"--}}>
             </div>
 
             @if($genres)<p>Жанры: {!! $genres !!}</p>@endif
