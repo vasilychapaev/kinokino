@@ -19,7 +19,7 @@
     @endforeach
 
     <hr class="sidebar-divider mt-3">
-    <div class="sidebar-heading mb-2">Разделы</div>
+    {{--<div class="sidebar-heading mb-2">Разделы</div>--}}
 
 <!--
     <li class="nav-item">
@@ -32,6 +32,7 @@
         <a class="nav-link pt-2 pb-1" href="#"><i class="far fa-flag"></i><span>Watched</span></a>
     </li>
 -->
+    @if($actors)
     <li class="nav-item">
         <a class="nav-link collapsed pt-2 pb-1" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
             <i class="fas fa-folder"></i><span>Актеры</span>
@@ -47,7 +48,9 @@
             </div>
         </div>
     </li>
+    @endif
 
+    @if($countries)
     <li class="nav-item">
         <a class="nav-link collapsed pt-2 pb-1" href="#" data-toggle="collapse" data-target="#collapsePagesC" aria-expanded="true" aria-controls="collapsePagesC">
             <i class="fas fa-folder"></i><span>Страны</span>
@@ -63,6 +66,8 @@
             </div>
         </div>
     </li>
+    @endif
+
 
     <hr class="sidebar-divider d-none d-md-block mt-3">
     <div class="text-center d-none d-md-inline">
