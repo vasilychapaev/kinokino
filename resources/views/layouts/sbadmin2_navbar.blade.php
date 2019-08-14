@@ -4,6 +4,15 @@
 </button>
 
 
+@if (Route::currentRouteName() == 'movie.detail' )
+<a class="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+    <div class="sidebar-brand-icon rotate-n-15">
+        <i class="fas fa-film"></i>
+    </div>
+    <div class="sidebar-brand-text mx-3">{{ config('app.name') }}</div>
+</a>
+@endif
+
 <!-- Topbar Search -->
 <form action="/" method="post" id="FormSearch" class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
     {{ csrf_field() }}
