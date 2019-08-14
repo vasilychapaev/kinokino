@@ -34,7 +34,7 @@ class Moonwalk extends Command
      *
      * @var string
      */
-    protected $signature = 'dev:imp1';
+    protected $signature = 'dev:imp1 {action?}';
 
     /**
      * The console command description.
@@ -70,6 +70,8 @@ class Moonwalk extends Command
     {
         ini_set('memory_limit', '2000M');
 
+        $argument = $this->arguments('action');
+
         $start = Carbon::now();
 
         // display class name
@@ -77,12 +79,12 @@ class Moonwalk extends Command
 
         // for action in command
         $ask_array = [
-            1 => ['name' => 'Foreign import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_foreign.json?api_token='],
-            2 => ['name' => 'Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_russian.json?api_token='],
-            3 => ['name' => 'Camrips import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_camrip.json?api_token='],
-            4 => ['name' => 'Serials import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_foreign.json?api_token='],
-            5 => ['name' => 'Serials Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_russian.json?api_token='],
-            6 => ['name' => 'Test File', 'url' => env('APP_URL') . '/test_ser_en.json'],
+            1 => ['name' => 'Foreign import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_foreign.json?api_token=', 'update' => 'http://moonwalk.cc/api/movies_updates.json?api_token='],
+            2 => ['name' => 'Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_russian.json?api_token=', 'update' => 'http://moonwalk.cc/api/movies_updates.json?category=Russian&api_token='],
+            3 => ['name' => 'Camrips import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_camrip.json?api_token=', 'update' => 'http://moonwalk.cc/api/movies_camrip.json?api_token='],
+            4 => ['name' => 'Serials import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_foreign.json?api_token=', 'update' => 'http://moonwalk.cc/api/serials_updates.json?api_token='],
+            5 => ['name' => 'Serials Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_russian.json?api_token=', 'update' => 'http://moonwalk.cc/api/serials_russian.json?api_token='],
+            /*6 => ['name' => 'Test File', 'url' => env('APP_URL') . '/test_ser_en.json'],*/
         ];
 
         $token = $this->token;
@@ -92,55 +94,109 @@ class Moonwalk extends Command
             $name[] = $key . ' - ' . $value['name'];
         }
 
-        // ask admin what to do
-        $ask = $this->ask('Enter the type of import: ' . implode('| ', $name));
+        if ($argument['action'] == 'new') {
 
-        // check the answer
-        if (!isset($ask_array[$ask])) {
-            $this->error('incorrect commnad: ' . $ask);
-            exit();
-        }
+            // ask admin what to do
+            $ask = $this->ask('Enter the type of import: ' . implode('| ', $name));
 
-        // display start action
-        $this->info('Working with ' . $ask_array[$ask]['name']);
+            // display start action
+            $this->info('Working with ' . $ask_array[$ask]['name']);
 
-        if (in_array($ask, [1])) {
+            // check the answer
+            if (!isset($ask_array[$ask])) {
+                $this->error('incorrect commnad: ' . $ask);
+                exit();
+            }
 
-            $this->foreign($ask_array[$ask]['url'] . $token);
+            if (in_array($ask, [1])) {
 
-        } elseif (in_array($ask, [2])) {
+                $this->foreign($ask_array[$ask]['url'] . $token);
 
-            $this->russian($ask_array[$ask]['url']  . $token);
+            } elseif (in_array($ask, [2])) {
 
-        } elseif (in_array($ask, [3])) {
+                $this->russian($ask_array[$ask]['url']  . $token);
 
-            $this->camrip($ask_array[$ask]['url']  . $token);
+            } elseif (in_array($ask, [3])) {
 
-        } elseif (in_array($ask, [4])) {
+                $this->camrip($ask_array[$ask]['url']  . $token);
 
-            $this->serial($ask_array[$ask]['url']  . $token);
+            } elseif (in_array($ask, [4])) {
 
-        } elseif (in_array($ask, [5])) {
+                $this->serial($ask_array[$ask]['url']  . $token);
 
-            $this->serialRus($ask_array[$ask]['url'] . $token);
+            } elseif (in_array($ask, [5])) {
 
-        } elseif (in_array($ask, [6])) {
+                $this->serialRus($ask_array[$ask]['url'] . $token);
 
-            $this->serial($ask_array[$ask]['url']);
+            } elseif (in_array($ask, [6])) {
+
+                $this->serial($ask_array[$ask]['url']);
+
+            } else {
+                $this->error('No action');
+                return False;
+            }
+
+            $finish = Carbon::now();
+
+            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('started at '. $start);
+            $this->info('finished at '. $finish);
+            $this->info('spent time: '. $start->diffForHumans($finish));
+            return True;
 
         } else {
-            $this->error('No action');
-            return False;
+
+            $this->info('update');
+
+            $this->foreign($ask_array[1]['update'] . $token);
+
+            $finish = Carbon::now();
+
+            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('started at '. $start);
+            $this->info('finished at '. $finish);
+            $this->info('spent time: '. $start->diffForHumans($finish));
+
+            $this->russian($ask_array[2]['update']  . $token);
+
+            $finish = Carbon::now();
+
+            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('started at '. $start);
+            $this->info('finished at '. $finish);
+            $this->info('spent time: '. $start->diffForHumans($finish));
+
+            $this->camrip($ask_array[3]['update']  . $token);
+
+            $finish = Carbon::now();
+
+            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('started at '. $start);
+            $this->info('finished at '. $finish);
+            $this->info('spent time: '. $start->diffForHumans($finish));
+
+            $this->serial($ask_array[4]['update']  . $token);
+
+            $finish = Carbon::now();
+
+            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('started at '. $start);
+            $this->info('finished at '. $finish);
+            $this->info('spent time: '. $start->diffForHumans($finish));
+
+            $this->serialRus($ask_array[5]['update'] . $token);
+
+            $finish = Carbon::now();
+
+            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('started at '. $start);
+            $this->info('finished at '. $finish);
+            $this->info('spent time: '. $start->diffForHumans($finish));
+
+            return True;
+
         }
-
-        $finish = Carbon::now();
-
-        $this->info('DONE '. $ask_array[$ask]['name']);
-        $this->info('started at '. $start);
-        $this->info('finished at '. $finish);
-        $this->info('spent time: '. $start->diffForHumans($finish));
-        return True;
-
 
     }
 
@@ -443,8 +499,6 @@ class Moonwalk extends Command
     protected function storeImport($data)
     {
 
-        $this->info('store movie');
-
         ImportMoonwalkForeign::firstOrcreate(
             ['kinopoisk_id' => $data['kinopoisk_id']],
             [
@@ -480,8 +534,6 @@ class Moonwalk extends Command
     protected function storeImportRu($data)
     {
 
-        $this->info('store movie');
-
         ImportMoonwalkRussian::firstOrcreate(
             ['kinopoisk_id' => $data['kinopoisk_id']],
             [
@@ -515,7 +567,6 @@ class Moonwalk extends Command
     }
 
     protected function storeImportCamrip($data) {
-        $this->info('store movie');
 
         ImportMoonwalkCamrip::firstOrcreate(
             ['kinopoisk_id' => $data['kinopoisk_id']],
@@ -549,7 +600,6 @@ class Moonwalk extends Command
     }
 
     protected function storeImportSerial($data) {
-        $this->info('store movie');
 
         ImportMoonwalkSerial::firstOrcreate(
             ['kinopoisk_id' => $data['kinopoisk_id']],
