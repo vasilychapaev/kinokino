@@ -28,7 +28,7 @@ class Film extends Model
             $item[] = $genre->Genre->name;
         }
         if (isset($item)) {
-            return str_limit(implode(', ', $item), '12', '...');
+            return str_limit(implode(', ', $item), '200', '...');
         }
         return null;
     }

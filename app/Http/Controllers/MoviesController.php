@@ -153,8 +153,8 @@ class MoviesController extends Controller
     public function show($slug)
     {
 
-        $movie = Film::where('slug', $slug)->with('FilmGenres')->with('FilmDirectors')
-            ->with('FilmActors')->with('FilmCountries')->firstOrFail();
+        $movie = Film::where('slug', $slug)->with('FilmGenres.Genre')->with('FilmDirectors.Director')
+            ->with('FilmActors.Actor')->with('FilmCountries.Country')->firstOrFail();
 
         // https fix
         $movie->iframe_url = str_replace('http://moonwalk.cc', 'https://protectorat.cc', $movie->iframe_url);
