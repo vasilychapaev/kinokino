@@ -41,7 +41,9 @@
 <!-- Page Wrapper -->
 <div id="wrapper">
 
-    @include('layouts.sbadmin2_sidebar')
+    @if(isset($sidbar))
+        @include('layouts.sbadmin2_sidebar')
+    @endif
 
     <!-- Content Wrapper -->
     <div id="content-wrapper" class="d-flex flex-column">
