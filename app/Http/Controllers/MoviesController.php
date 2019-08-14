@@ -47,9 +47,8 @@ class MoviesController extends Controller
             $movies->whereHas('FilmGenres.Genre', function ($q) use ($slug) {
                 $q->where('slug', $slug);
             });
-        }else{
-            $movies->with('FilmGenres.Genre');
         }
+        $movies->with('FilmGenres.Genre');
 
         if ($type == 'actor') {
 
@@ -58,9 +57,9 @@ class MoviesController extends Controller
             $movies->whereHas('FilmActors.Actor', function ($q) use ($slug) {
                 $q->where('slug', $slug);
             });
-        }else{
-            $movies->with('FilmActors.Actor');
         }
+        $movies->with('FilmActors.Actor');
+
 
         if ($type == 'country') {
 
@@ -69,9 +68,8 @@ class MoviesController extends Controller
             $movies->whereHas('FilmCountries.Country', function ($q) use ($slug) {
                 $q->where('slug', $slug);
             });
-        }else{
-            $movies->with('FilmCountries.Country');
         }
+        $movies->with('FilmCountries.Country');
 
         if ($type == 'director') {
 
@@ -80,9 +78,8 @@ class MoviesController extends Controller
             $movies->whereHas('FilmDirectors.Director', function ($q) use ($slug) {
                 $q->where('slug', $slug);
             });
-        }else{
-            $movies->with('FilmDirectors.Director');
         }
+        $movies->with('FilmDirectors.Director');
 
         // get all films
         $movies = $movies->orderby('updated_at', 'DESC')->Paginate(30);
