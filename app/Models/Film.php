@@ -21,6 +21,20 @@ class Film extends Model
         return $this->hasMany(Film_genre::class, 'film_id', 'id');
     }
 
+    public function DisplayGenres() {
+
+        $genres = $this->FilmGenres;
+        foreach ($genres as $genre) {
+            $item[] = $genre->Genre->name;
+
+
+        }
+        if (isset($item)) {
+            return str_limit(implode(', ', $item), '12', '...');
+        }
+        return null;
+    }
+
     public function FilmDirectors() {
         return $this->hasMany(Film_director::class, 'film_id', 'id');
     }

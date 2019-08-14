@@ -22,10 +22,13 @@
                 </div>--}}
 
                 <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
+                    <small>{{ $item->title_ru }}</small>
                     <div class="card bg-primary text-white shadow">
-                        <a href="/movie/{{ $item->id }}"><img src="{{ $item->poster }}" class="card-img-top card-img-bottom" alt="..."></a>
-
+                        <a href="/movie/{{ $item->slug }}">
+                            <img src="{{ $item->poster }}" class="card-img-top card-img-bottom" alt="...">
+                        </a>
                     </div>
+                    <small>{{ $item->year }} / {{ $item->DisplayGenres() }}</small>
                 </div>
 
                 {{--<div class="col-lg-2 mb-2">
