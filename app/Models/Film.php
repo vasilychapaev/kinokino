@@ -29,7 +29,10 @@ class Film extends Model
 
 
         }
-        return str_limit(implode(', ', $item), '12', '...');
+        if (isset($item)) {
+            return str_limit(implode(', ', $item), '12', '...');
+        }
+        return null;
     }
 
     public function FilmDirectors() {
