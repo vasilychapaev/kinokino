@@ -20,7 +20,7 @@ Route::match(['get', 'post'], '/', 'MoviesController@main');
 Route::post('search', 'MoviesController@search');
 Route::get('category', 'MoviesController@category');
 //Route::get('/movie/{slug}', 'MoviesController@show');
-Route::get('{type}/{slug}', 'MoviesController@cat');
+Route::get('{type}/{slug}', 'MoviesController@cat')->name('movie.detail');
 
 
 //Route::get('/category/comedy', 'MoviesController@itemsGenre');
