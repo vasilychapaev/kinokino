@@ -77,7 +77,7 @@ class MoviesController extends Controller
         }
 
         // get all films
-        $movies = $movies->limit(30)->orderby('updated_at', 'DESC')->pluck('poster', 'slug');
+        $movies = $movies->orderby('updated_at', 'DESC')->Paginate(30);
 
         // get genres
         $genres = Cache::remember('genres', '3600', function () {
