@@ -8,6 +8,7 @@ use App\Models\Director;
 use App\Models\Film;
 use App\Models\Genre;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class MoviesController extends Controller
 {
@@ -75,9 +76,36 @@ class MoviesController extends Controller
             });
         }
 
-        $movies = $movies->limit(30)->orderby('updated_at', 'DESC')->pluck('poster', 'slug');
+        // get all films
+        $movies = $movies->orderby('updated_at', 'DESC')->Paginate(30);
 
-        return view('movies.index', compact('movies', 'title'));
+        // get genres
+        $genres = Cache::remember('genres', '3600', function () {
+            return Genre::with('Film_genre')->limit(10)->get()->sortBy(function($q) {
+                return $q->Film_genre->count();
+            });
+        });
+
+        // get actors
+        $actors = Cache::remember('actors', '3600', function () {
+            return Actor::with('Film_actor')->limit(30)->get()->sortBy(function($q)
+            {
+                return $q->Film_actor->count();
+            });
+        });
+
+        // get countries
+        $countries = Cache::remember('countries', '3600', function () {
+            return Country::with('Film_country')->limit(10)->get()->sortBy(function($q)
+            {
+                return $q->Film_country->count();
+            });
+        });
+
+        $sidbar = true;
+
+        return view('movies.index', compact('movies', 'title', 'genres', 'actors',
+            'countries', 'sidbar'));
     }
 
     public function main(Request $request) {
