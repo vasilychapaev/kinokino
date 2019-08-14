@@ -81,25 +81,25 @@ class MoviesController extends Controller
 
         // get genres
         $genres = Cache::remember('genres', '3600', function () {
-            return Genre::with('Film_genre')->limit(10)->get()/*->sortBy(function($q) {
+            return Genre::with('Film_genre')->limit(10)->get()->sortBy(function($q) {
                 return $q->Film_genre->count();
-            })*/;
+            });
         });
 
         // get actors
         $actors = Cache::remember('actors', '3600', function () {
-            return Actor::with('Film_actor')->limit(30)->get()/*->sortBy(function($q)
+            return Actor::with('Film_actor')->limit(30)->get()->sortBy(function($q)
             {
                 return $q->Film_actor->count();
-            })*/;
+            });
         });
 
         // get countries
         $countries = Cache::remember('countries', '3600', function () {
-            return Country::with('Film_country')->limit(10)/*->get()->sortBy(function($q)
+            return Country::with('Film_country')->limit(10)->get()->sortBy(function($q)
             {
                 return $q->Film_country->count();
-            })*/;
+            });
         });
 
         $sidbar = true;

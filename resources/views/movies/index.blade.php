@@ -23,7 +23,7 @@
 
                 <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
                     <div class="card bg-primary text-white shadow">
-                        <a href="/movie/{{ $item->id }}"><img src="{{ $item->poster }}" class="card-img-top card-img-bottom" alt="..."></a>
+                        <a href="/movie/{{ $item->slug }}"><img src="{{ $item->poster }}" class="card-img-top card-img-bottom" alt="..."></a>
 
                     </div>
                 </div>
