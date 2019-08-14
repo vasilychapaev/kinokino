@@ -104,8 +104,11 @@ class MoviesController extends Controller
 
         $sidbar = true;
 
+        // SEO
+        $seo_title = $title;
+
         return view('movies.index', compact('movies', 'title', 'genres', 'actors',
-            'countries', 'sidbar'));
+            'countries', 'sidbar', 'seo_title'));
     }
 
     public function main(Request $request) {
@@ -182,7 +185,14 @@ class MoviesController extends Controller
 
         $year = '<a href="'.url('year/'.$movie->year).'">'.$movie->year.'</a>';
 
-        return view('movies.show', compact('movie', 'genres', 'actors', 'countries', 'directors', 'year'));
+        // SEO
+        $seo_title = 'Смотреть ' . $movie->title_ru . "$movie->title_en ? ' - ' . $movie->title_en , ''" . $movie->year;
+        $seo_description = $movie->description;
+        $seo_key = $movie->title_ru . ', ' . $movie->year . ', ' . $movie->DisplayGenres();
+        $seo_image = $movie->poster;
+
+        return view('movies.show', compact('movie', 'genres', 'actors', 'countries', 'directors', 'year',
+            'seo_title', 'seo_description', 'seo_key', 'seo_image'));
     }
 
 }

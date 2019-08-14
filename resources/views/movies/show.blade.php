@@ -48,7 +48,8 @@
         <!-- Poster -->
         <div class="col-lg-3">
             <div class="card shadow mb-4">
-                <img src="{{ $movie->poster }}" class="card-img-top card-img-bottom" alt="..."
+                <img src="{{ $movie->poster }}" class="card-img-top card-img-bottom" alt="{{ $movie->title_ru }}"
+                     title="{{ $movie->title_ru }} - {{ $movie->title_en }}"
                      {{--style="max-height: 375px"--}}>
             </div>
 

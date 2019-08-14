@@ -2,17 +2,15 @@
 <html lang="en">
 
 <head>
-
+    <title>@if (isset($seo_title)) {{ $seo_title  }} @else {{ config('app.name') }} @endif</title>
+    @if (isset($seo_description))<meta name="description" content="{{ $seo_description }}">@endif
+    @if (isset($seo_key))<meta name="keywords" content="{{ $seo_key }}">@endif
+    @if (isset($seo_image)) <meta property="og:image" content="{{ $seo_image }}" />@endif
+    <meta name="author" content="{{ config('app.name') }}">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>{{ config('app.name') }}</title>
-
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
 
     <!-- Custom fonts for this template-->
 {{--    <link href="/themes/sbadmin2/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">--}}

@@ -24,7 +24,8 @@
                 <div class="col-6 col-sm-4 col-md-3 col-lg-2 mb-3">
                     <div class="card bg-primary text-white shadow">
                         <a href="/movie/{{ $item->slug }}">
-                            <img src="{{ $item->poster }}" class="card-img-top card-img-bottom" alt="...">
+                            <img src="{{ $item->poster }}" class="card-img-top card-img-bottom" alt="{{ $item->title_ru }} {{ $item->year }}"
+                                 title="{{ $item->title_ru }} - {{ $item->year }} / {{ $item->DisplayGenres() }}">
                         </a>
                     </div>
                 </div>
