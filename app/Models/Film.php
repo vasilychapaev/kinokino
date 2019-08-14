@@ -26,8 +26,6 @@ class Film extends Model
         $genres = $this->FilmGenres;
         foreach ($genres as $genre) {
             $item[] = $genre->Genre->name;
-
-
         }
         if (isset($item)) {
             return str_limit(implode(', ', $item), '12', '...');
