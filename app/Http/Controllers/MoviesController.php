@@ -15,7 +15,7 @@ class MoviesController extends Controller
     public function index($type, $slug)
     {
 
-        $title = 'Новинки на сайте';
+        $title = 'Новинки на сайте ' . env('APP_NAME');
 
         $movies = Film::whereNotNull('poster');
 
