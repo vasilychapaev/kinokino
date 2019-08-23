@@ -17,6 +17,7 @@ use App\Models\ImportMoonwalkCamrip;
 use App\Models\ImportMoonwalkForeign;
 use App\Models\ImportMoonwalkRussian;
 use App\Models\ImportMoonwalkSerial;
+use App\Models\ImportMoonwalkSerialRu;
 use App\Models\Season_episodes_count;
 use App\Models\Source_Type;
 use App\Models\Studio;
@@ -83,7 +84,7 @@ class Moonwalk extends Command
             2 => ['name' => 'Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_russian.json?api_token=', 'update' => 'http://moonwalk.cc/api/movies_updates.json?category=Russian&api_token='],
             3 => ['name' => 'Camrips import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_camrip.json?api_token=', 'update' => 'http://moonwalk.cc/api/movies_camrip.json?api_token='],
             4 => ['name' => 'Serials import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_foreign.json?api_token=', 'update' => 'http://moonwalk.cc/api/serials_updates.json?api_token='],
-            5 => ['name' => 'Serials Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_russian.json?api_token=', 'update' => 'http://moonwalk.cc/api/serials_russian.json?api_token='],
+            5 => ['name' => 'Serials Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_russian.json?api_token=', 'update' => 'http://moonwalk.cc/api/serials_updates.json?category=Russian&api_token='],
             /*6 => ['name' => 'Test File', 'url' => env('APP_URL') . '/test_ser_en.json'],*/
         ];
 
@@ -147,34 +148,34 @@ class Moonwalk extends Command
 
         } else {
 
-            $this->info('update');
-
-            $this->foreign($ask_array[1]['update'] . $token, TRUE);
-
-            $finish = Carbon::now();
-
-            $this->info('DONE '. $ask_array[1]['name']);
-            $this->info('started at '. $start);
-            $this->info('finished at '. $finish);
-            $this->info('spent time: '. $start->diffForHumans($finish));
-
-            $this->russian($ask_array[2]['update']  . $token, TRUE);
-
-            $finish = Carbon::now();
-
-            $this->info('DONE '. $ask_array[2]['name']);
-            $this->info('started at '. $start);
-            $this->info('finished at '. $finish);
-            $this->info('spent time: '. $start->diffForHumans($finish));
-
-            $this->camrip($ask_array[3]['update']  . $token);
-
-            $finish = Carbon::now();
-
-            $this->info('DONE '. $ask_array[3]['name']);
-            $this->info('started at '. $start);
-            $this->info('finished at '. $finish);
-            $this->info('spent time: '. $start->diffForHumans($finish));
+//            $this->info('update');
+//
+//            $this->foreign($ask_array[1]['update'] . $token, TRUE);
+//
+//            $finish = Carbon::now();
+//
+//            $this->info('DONE '. $ask_array[1]['name']);
+//            $this->info('started at '. $start);
+//            $this->info('finished at '. $finish);
+//            $this->info('spent time: '. $start->diffForHumans($finish));
+//
+//            $this->russian($ask_array[2]['update']  . $token, TRUE);
+//
+//            $finish = Carbon::now();
+//
+//            $this->info('DONE '. $ask_array[2]['name']);
+//            $this->info('started at '. $start);
+//            $this->info('finished at '. $finish);
+//            $this->info('spent time: '. $start->diffForHumans($finish));
+//
+//            $this->camrip($ask_array[3]['update']  . $token);
+//
+//            $finish = Carbon::now();
+//
+//            $this->info('DONE '. $ask_array[3]['name']);
+//            $this->info('started at '. $start);
+//            $this->info('finished at '. $finish);
+//            $this->info('spent time: '. $start->diffForHumans($finish));
 
             $this->serial($ask_array[4]['update']  . $token, TRUE);
 
@@ -451,9 +452,15 @@ class Moonwalk extends Command
 
             $bar = $this->output->createProgressBar($count);
 
-            foreach ($items as $item) {
+            foreach ($items as $value) {
 
                 $bar->advance();
+
+                if ($update == TRUE) {
+                    $item = $value['serial'];
+                } else {
+                    $item = $value;
+                }
 
                 $get['title_ru'] = $item['title_ru'];
                 $get['title_en'] = $item['title_en'];
@@ -475,7 +482,7 @@ class Moonwalk extends Command
                 $get['material_data'] = isset($item['material_data']) ? $item['material_data'] : '';
                 $get['source_type'] = Null;
                 $get['duration'] = Null;
-                $get['added_at'] = Null;
+                $get['added_at'] = isset($item['added_at']) ? $item['added_at'] : Null;
 
                 // store data
                 $this->storeImportSerial($get);
@@ -501,6 +508,8 @@ class Moonwalk extends Command
                 $count = count($items);
                 $this->info('updating...');
 
+                $this->info('updating...');
+
             } else {
 
                 $report = $book->get('report');
@@ -517,9 +526,15 @@ class Moonwalk extends Command
 
             $bar = $this->output->createProgressBar($count);
 
-            foreach ($items as $item) {
+            foreach ($items as $value) {
 
                 $bar->advance();
+
+                if ($update == TRUE) {
+                    $item = $value['serial'];
+                } else {
+                    $item = $value;
+                }
 
                 $get['title_ru'] = $item['title_ru'];
                 $get['title_en'] = $item['title_en'];
@@ -541,7 +556,7 @@ class Moonwalk extends Command
                 $get['material_data'] = isset($item['material_data']) ? $item['material_data'] : '';
                 $get['source_type'] = Null;
                 $get['duration'] = Null;
-                $get['added_at'] = Null;
+                $get['added_at'] = isset($item['added_at']) ? $item['added_at'] : Null;
 
                 // store data
                 $this->storeImportSerialRus($get);
@@ -692,7 +707,7 @@ class Moonwalk extends Command
 
     protected function storeImportSerialRus($data) {
 
-        ImportMoonwalkSerial::firstOrcreate(
+        ImportMoonwalkSerialRu::firstOrcreate(
             ['kinopoisk_id' => $data['kinopoisk_id']],
             [
                 'title_ru' => $data['title_ru'],
