@@ -149,20 +149,20 @@ class Moonwalk extends Command
 
             $this->info('update');
 
-            $this->foreign($ask_array[1]['update'] . $token);
+            $this->foreign($ask_array[1]['update'] . $token, TRUE);
 
             $finish = Carbon::now();
 
-            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('DONE '. $ask_array[1]['name']);
             $this->info('started at '. $start);
             $this->info('finished at '. $finish);
             $this->info('spent time: '. $start->diffForHumans($finish));
 
-            $this->russian($ask_array[2]['update']  . $token);
+            $this->russian($ask_array[2]['update']  . $token, TRUE);
 
             $finish = Carbon::now();
 
-            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('DONE '. $ask_array[2]['name']);
             $this->info('started at '. $start);
             $this->info('finished at '. $finish);
             $this->info('spent time: '. $start->diffForHumans($finish));
@@ -171,25 +171,25 @@ class Moonwalk extends Command
 
             $finish = Carbon::now();
 
-            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('DONE '. $ask_array[3]['name']);
             $this->info('started at '. $start);
             $this->info('finished at '. $finish);
             $this->info('spent time: '. $start->diffForHumans($finish));
 
-            $this->serial($ask_array[4]['update']  . $token);
+            $this->serial($ask_array[4]['update']  . $token, TRUE);
 
             $finish = Carbon::now();
 
-            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('DONE '. $ask_array[4]['name']);
             $this->info('started at '. $start);
             $this->info('finished at '. $finish);
             $this->info('spent time: '. $start->diffForHumans($finish));
 
-            $this->serialRus($ask_array[5]['update'] . $token);
+            $this->serialRus($ask_array[5]['update'] . $token, TRUE);
 
             $finish = Carbon::now();
 
-            $this->info('DONE '. $ask_array[$ask]['name']);
+            $this->info('DONE '. $ask_array[5]['name']);
             $this->info('started at '. $start);
             $this->info('finished at '. $finish);
             $this->info('spent time: '. $start->diffForHumans($finish));
@@ -200,22 +200,32 @@ class Moonwalk extends Command
 
     }
 
-    protected function foreign($url)
+    protected function foreign($url, $update = false)
     {
         $this->info('url: ' . $url);
         $url = $this->storeFile($url);
 
-        StreamParser::json($url)->each(function (Collection $book) {
+        StreamParser::json($url)->each(function (Collection $book) use($update) {
 
-            $report = $book->get('report');
+            if ($update == TRUE) {
 
-            $this->info('report: ' . $report['report_name']);
-            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
-            $this->info('count: ' . $report['total_count']);
+                $items = $book->get('updates');
+                $count = count($items);
+                $this->info('updating...');
 
-            $items = $report['movies'];
+            } else {
 
-            $bar = $this->output->createProgressBar($report['total_count']);
+                $report = $book->get('report');
+
+                $items = $report['movies'];
+                $count = $report['total_count'];
+
+                $this->info('report: ' . $report['report_name']);
+                $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+                $this->info('count: ' . $count);
+            }
+
+            $bar = $this->output->createProgressBar($count);
 
             foreach ($items as $item) {
 
@@ -278,22 +288,34 @@ class Moonwalk extends Command
 
     }
 
-    protected function russian($url)
+    protected function russian($url, $update = false)
     {
         $this->info('url: ' . $url);
         $url = $this->storeFile($url);
 
-        StreamParser::json($url)->each(function (Collection $book) {
+        StreamParser::json($url)->each(function (Collection $book) use($update) {
 
-            $report = $book->get('report');
+            if ($update == TRUE) {
 
-            $this->info('report: ' . $report['report_name']);
-            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
-            $this->info('count: ' . $report['total_count']);
+                $items = $book->get('updates');
+                $count = count($items);
+                $this->info('updating...');
 
-            $items = $report['movies'];
+            } else {
 
-            $bar = $this->output->createProgressBar($report['total_count']);
+                $report = $book->get('report');
+
+                $count = $report['total_count'];
+
+                $this->info('report: ' . $report['report_name']);
+                $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+                $this->info('count: ' . $count);
+
+                $items = $report['movies'];
+
+            }
+
+            $bar = $this->output->createProgressBar($count);
 
             foreach ($items as $item) {
 
@@ -333,22 +355,34 @@ class Moonwalk extends Command
 
     }
 
-    protected function camrip($url)
+    protected function camrip($url, $update = false)
     {
         $this->info('url: ' . $url);
         $url = $this->storeFile($url);
 
-        StreamParser::json($url)->each(function (Collection $book) {
+        StreamParser::json($url)->each(function (Collection $book) use($update) {
 
-            $report = $book->get('report');
+            if ($update == TRUE) {
 
-            $this->info('report: ' . $report['report_name']);
-            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
-            $this->info('count: ' . $report['total_count']);
+                $items = $book->get('updates');
+                $count = count($items);
+                $this->info('updating...');
 
-            $items = $report['movies'];
+            } else {
 
-            $bar = $this->output->createProgressBar($report['total_count']);
+                $report = $book->get('report');
+
+                $count = $report['total_count'];
+
+                $this->info('report: ' . $report['report_name']);
+                $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+                $this->info('count: ' . $count);
+
+                $items = $report['movies'];
+
+            }
+
+            $bar = $this->output->createProgressBar($count);
 
             foreach ($items as $item) {
 
@@ -388,22 +422,34 @@ class Moonwalk extends Command
 
     }
 
-    protected function serial($url)
+    protected function serial($url, $update)
     {
         $this->info('url: ' . $url);
         $url = $this->storeFile($url);
 
-        StreamParser::json($url)->each(function (Collection $book) {
+        StreamParser::json($url)->each(function (Collection $book) use($update) {
 
-            $report = $book->get('report');
+            if ($update == TRUE) {
 
-            $this->info('report: ' . $report['report_name']);
-            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
-            $this->info('count: ' . $report['total_count']);
+                $items = $book->get('updates');
+                $count = count($items);
+                $this->info('updating...');
 
-            $items = $report['serials'];
+            } else {
 
-            $bar = $this->output->createProgressBar($report['total_count']);
+                $report = $book->get('report');
+
+                $count = $report['total_count'];
+
+                $this->info('report: ' . $report['report_name']);
+                $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+                $this->info('count: ' . $count);
+
+                $items = $report['serials'];
+
+            }
+
+            $bar = $this->output->createProgressBar($count);
 
             foreach ($items as $item) {
 
@@ -442,22 +488,34 @@ class Moonwalk extends Command
 
     }
 
-    protected function serialRus($url)
+    protected function serialRus($url, $update = false)
     {
         $this->info('url: ' . $url);
         $url = $this->storeFile($url);
 
-        StreamParser::json($url)->each(function (Collection $book) {
+        StreamParser::json($url)->each(function (Collection $book) use($update) {
 
-            $report = $book->get('report');
+            if ($update == TRUE) {
 
-            $this->info('report: ' . $report['report_name']);
-            $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
-            $this->info('count: ' . $report['total_count']);
+                $items = $book->get('updates');
+                $count = count($items);
+                $this->info('updating...');
 
-            $items = $report['serials'];
+            } else {
 
-            $bar = $this->output->createProgressBar($report['total_count']);
+                $report = $book->get('report');
+
+                $count = $report['total_count'];
+
+                $this->info('report: ' . $report['report_name']);
+                $this->info('generated: ' . Carbon::createFromTimestamp($report['generated_at'])->toDateTimeString());
+                $this->info('count: ' . $count);
+
+                $items = $report['serials'];
+
+            }
+
+            $bar = $this->output->createProgressBar($count);
 
             foreach ($items as $item) {
 
