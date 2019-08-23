@@ -258,6 +258,8 @@ class Moonwalk extends Command
                 // store data
                 $this->storeImport($get);
 
+                $item = Null;
+
             }
 
             $bar->finish();
@@ -348,6 +350,8 @@ class Moonwalk extends Command
                 // store data
                 $this->storeImportRu($get);
 
+                $item = Null;
+
             }
 
             $bar->finish();
@@ -414,6 +418,8 @@ class Moonwalk extends Command
 
                 // store data
                 $this->storeImportCamrip($get);
+
+                $item = Null;
 
             }
 
@@ -486,6 +492,8 @@ class Moonwalk extends Command
 
                 // store data
                 $this->storeImportSerial($get);
+
+                $item = Null;
 
             }
 
@@ -560,6 +568,8 @@ class Moonwalk extends Command
 
                 // store data
                 $this->storeImportSerialRus($get);
+
+                $item = Null;
 
             }
 
