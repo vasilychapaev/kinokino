@@ -82,7 +82,7 @@ class Moonwalk extends Command
         $ask_array = [
             1 => ['name' => 'Foreign import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_foreign.json?api_token=', 'update' => 'http://moonwalk.cc/api/movies_updates.json?api_token='],
             2 => ['name' => 'Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_russian.json?api_token=', 'update' => 'http://moonwalk.cc/api/movies_updates.json?category=Russian&api_token='],
-            3 => ['name' => 'Camrips import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_camrip.json?api_token=', 'update' => 'http://moonwalk.cc/api/movies_camrip.json?api_token='],
+            3 => ['name' => 'Camrips import from Moonwalk', 'url' => 'http://moonwalk.cc/api/movies_camrip.json?api_token=', 'update' => 'http://moonwalk.cc/api/movies_updates.json?category=CamRip&api_token='],
             4 => ['name' => 'Serials import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_foreign.json?api_token=', 'update' => 'http://moonwalk.cc/api/serials_updates.json?api_token='],
             5 => ['name' => 'Serials Russian import from Moonwalk', 'url' => 'http://moonwalk.cc/api/serials_russian.json?api_token=', 'update' => 'http://moonwalk.cc/api/serials_updates.json?category=Russian&api_token='],
             /*6 => ['name' => 'Test File', 'url' => env('APP_URL') . '/test_ser_en.json'],*/
@@ -148,34 +148,34 @@ class Moonwalk extends Command
 
         } else {
 
-//            $this->info('update');
-//
-//            $this->foreign($ask_array[1]['update'] . $token, TRUE);
-//
-//            $finish = Carbon::now();
-//
-//            $this->info('DONE '. $ask_array[1]['name']);
-//            $this->info('started at '. $start);
-//            $this->info('finished at '. $finish);
-//            $this->info('spent time: '. $start->diffForHumans($finish));
-//
-//            $this->russian($ask_array[2]['update']  . $token, TRUE);
-//
-//            $finish = Carbon::now();
-//
-//            $this->info('DONE '. $ask_array[2]['name']);
-//            $this->info('started at '. $start);
-//            $this->info('finished at '. $finish);
-//            $this->info('spent time: '. $start->diffForHumans($finish));
-//
-//            $this->camrip($ask_array[3]['update']  . $token);
-//
-//            $finish = Carbon::now();
-//
-//            $this->info('DONE '. $ask_array[3]['name']);
-//            $this->info('started at '. $start);
-//            $this->info('finished at '. $finish);
-//            $this->info('spent time: '. $start->diffForHumans($finish));
+            $this->info('update');
+
+            $this->foreign($ask_array[1]['update'] . $token, TRUE);
+
+            $finish = Carbon::now();
+
+            $this->info('DONE '. $ask_array[1]['name']);
+            $this->info('started at '. $start);
+            $this->info('finished at '. $finish);
+            $this->info('spent time: '. $start->diffForHumans($finish));
+
+            $this->russian($ask_array[2]['update'] . $token, TRUE);
+
+            $finish = Carbon::now();
+
+            $this->info('DONE '. $ask_array[2]['name']);
+            $this->info('started at '. $start);
+            $this->info('finished at '. $finish);
+            $this->info('spent time: '. $start->diffForHumans($finish));
+
+            $this->camrip($ask_array[3]['update'] . $token, TRUE);
+
+            $finish = Carbon::now();
+
+            $this->info('DONE '. $ask_array[3]['name']);
+            $this->info('started at '. $start);
+            $this->info('finished at '. $finish);
+            $this->info('spent time: '. $start->diffForHumans($finish));
 
             $this->serial($ask_array[4]['update']  . $token, TRUE);
 
